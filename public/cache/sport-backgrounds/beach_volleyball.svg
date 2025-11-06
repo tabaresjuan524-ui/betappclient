@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="375" height="92" viewBox="0 0 375 92">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_140" data-name="Rectangle 140" width="375" height="92" transform="translate(0 -0.1)"/>
+    </clipPath>
+  </defs>
+  <g id="Group_166" data-name="Group 166" transform="translate(0 0.1)" clip-path="url(#clip-path)">
+    <path id="Path_396" data-name="Path 396" d="M0,0H375V94H0Z" transform="translate(0 -1)" fill="#f7d443"/>
+    <g id="Group_165" data-name="Group 165" opacity="0.5">
+      <path id="Path_397" data-name="Path 397" d="M96.9,92V88" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2"/>
+      <path id="Path_398" data-name="Path 398" d="M96.9,80.4V7.9" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2" stroke-dasharray="7.636 7.636"/>
+      <path id="Path_399" data-name="Path 399" d="M96.9,4V0" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2"/>
+      <path id="Path_400" data-name="Path 400" d="M187.5,92V88" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2"/>
+      <path id="Path_401" data-name="Path 401" d="M187.5,80.4V7.9" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2" stroke-dasharray="7.636 7.636"/>
+      <path id="Path_402" data-name="Path 402" d="M187.5,4V0" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2"/>
+      <path id="Path_403" data-name="Path 403" d="M278.1,92V88" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2"/>
+      <path id="Path_404" data-name="Path 404" d="M278.1,80.4V7.9" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2" stroke-dasharray="7.636 7.636"/>
+      <path id="Path_405" data-name="Path 405" d="M278.1,4V0" fill="none" stroke="#1c75bc" stroke-miterlimit="10" stroke-width="2"/>
+    </g>
+  </g>
+</svg>

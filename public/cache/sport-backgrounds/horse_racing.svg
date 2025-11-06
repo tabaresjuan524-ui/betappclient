@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Horse Racing Track -->
+  <defs>
+    <linearGradient id="horseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b4513;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#7ed321;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#8b4513;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Track Background -->
+  <rect x="0" y="0" width="200" height="200" fill="url(#horseGrad)"/>
+  
+  <!-- Racing Track -->
+  <ellipse cx="100" cy="100" rx="80" ry="50" fill="none" stroke="#8b4513" stroke-width="15"/>
+  <ellipse cx="100" cy="100" rx="80" ry="50" fill="none" stroke="#d2691e" stroke-width="8"/>
+  
+  <!-- Inner Field -->
+  <ellipse cx="100" cy="100" rx="65" ry="35" fill="#7ed321" opacity="0.6"/>
+  
+  <!-- Starting Gate -->
+  <rect x="175" y="95" width="15" height="10" fill="#2c3e50" stroke="#34495e" stroke-width="1"/>
+  
+  <!-- Finish Line -->
+  <g stroke="#ffffff" stroke-width="2">
+    <line x1="20" y1="95" x2="20" y2="105"/>
+    <line x1="22" y1="95" x2="22" y2="105"/>
+    <line x1="24" y1="95" x2="24" y2="105"/>
+    <line x1="26" y1="95" x2="26" y2="105"/>
+  </g>
+  
+  <!-- Horses -->
+  <g id="horse1" transform="translate(25,100)">
+    <!-- Horse Body -->
+    <ellipse cx="0" cy="0" rx="8" ry="4" fill="#8b4513"/>
+    <!-- Horse Head -->
+    <ellipse cx="-6" cy="-1" rx="3" ry="2" fill="#8b4513"/>
+    <!-- Legs -->
+    <line x1="-3" y1="4" x2="-3" y2="8" stroke="#8b4513" stroke-width="1"/>
+    <line x1="3" y1="4" x2="3" y2="8" stroke="#8b4513" stroke-width="1"/>
+    <!-- Jockey -->
+    <circle cx="-1" cy="-3" r="2" fill="#e74c3c"/>
+    <rect x="-2" y="-5" width="4" height="3" fill="#3498db"/>
+  </g>
+  
+  <g id="horse2" transform="translate(35,98)">
+    <ellipse cx="0" cy="0" rx="8" ry="4" fill="#654321"/>
+    <ellipse cx="-6" cy="-1" rx="3" ry="2" fill="#654321"/>
+    <line x1="-3" y1="4" x2="-3" y2="8" stroke="#654321" stroke-width="1"/>
+    <line x1="3" y1="4" x2="3" y2="8" stroke="#654321" stroke-width="1"/>
+    <circle cx="-1" cy="-3" r="2" fill="#f39c12"/>
+    <rect x="-2" y="-5" width="4" height="3" fill="#e74c3c"/>
+  </g>
+  
+  <g id="horse3" transform="translate(45,102)">
+    <ellipse cx="0" cy="0" rx="8" ry="4" fill="#2c3e50"/>
+    <ellipse cx="-6" cy="-1" rx="3" ry="2" fill="#2c3e50"/>
+    <line x1="-3" y1="4" x2="-3" y2="8" stroke="#2c3e50" stroke-width="1"/>
+    <line x1="3" y1="4" x2="3" y2="8" stroke="#2c3e50" stroke-width="1"/>
+    <circle cx="-1" cy="-3" r="2" fill="#9b59b6"/>
+    <rect x="-2" y="-5" width="4" height="3" fill="#27ae60"/>
+  </g>
+  
+  <!-- Track Markers -->
+  <text x="100" y="60" text-anchor="middle" fill="#ffffff" font-family="Arial" font-size="12" font-weight="bold">DERBY</text>
+  
+  <!-- Grandstand -->
+  <rect x="10" y="140" width="40" height="20" fill="#34495e" opacity="0.7"/>
+  <rect x="12" y="138" width="36" height="4" fill="#e74c3c"/>
+  
+  <!-- Distance Markers -->
+  <circle cx="100" cy="50" r="3" fill="#ffffff"/>
+  <text x="100" y="52" text-anchor="middle" fill="#000000" font-family="Arial" font-size="6">1/2</text>
+  
+  <circle cx="180" cy="100" r="3" fill="#ffffff"/>
+  <text x="180" y="102" text-anchor="middle" fill="#000000" font-family="Arial" font-size="6">START</text>
+</svg>

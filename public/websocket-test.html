@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Cache Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .button:hover { background: #0056b3; }
+        .log { background: #f8f9fa; padding: 10px; border-radius: 3px; margin: 10px 0; max-height: 300px; overflow-y: auto; }
+        .connected { color: green; }
+        .disconnected { color: red; }
+        .message { margin: 5px 0; }
+        .outgoing { color: blue; }
+        .incoming { color: green; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Cache Implementation Test</h1>
+    
+    <div class="section">
+        <h2>Connection Status</h2>
+        <div id="status" class="disconnected">Disconnected</div>
+        <button class="button" onclick="connect()">Connect</button>
+        <button class="button" onclick="disconnect()">Disconnect</button>
+    </div>
+
+    <div class="section">
+        <h2>Cache Operations</h2>
+        <button class="button" onclick="subscribeToLeagues('football')">Subscribe to Football Leagues</button>
+        <button class="button" onclick="unsubscribeFromLeagues('football')">Unsubscribe from Football Leagues</button>
+        <button class="button" onclick="subscribeToLeagueEvents('league123')">Subscribe to League Events</button>
+        <button class="button" onclick="unsubscribeFromLeagueEvents('league123')">Unsubscribe from League Events</button>
+        <button class="button" onclick="getCacheStats()">Get Cache Stats</button>
+    </div>
+
+    <div class="section">
+        <h2>Messages Log</h2>
+        <button class="button" onclick="clearLog()">Clear Log</button>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        let ws = null;
+        let messageCount = 0;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = `[${timestamp}] ${message}`;
+            logDiv.appendChild(messageDiv);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(status) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = status;
+            statusDiv.className = status === 'Connected' ? 'connected' : 'disconnected';
+        }
+
+        function connect() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                log('Already connected', 'info');
+                return;
+            }
+
+            log('Connecting to WebSocket server...', 'info');
+            ws = new WebSocket('ws://localhost:8081');
+
+            ws.onopen = () => {
+                log('Connected to WebSocket server', 'info');
+                updateStatus('Connected');
+            };
+
+            ws.onmessage = (event) => {
+                messageCount++;
+                log(`Received (#${messageCount}): ${event.data.substring(0, 200)}${event.data.length > 200 ? '...' : ''}`, 'incoming');
+                
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'cacheStats') {
+                        log(`Cache Stats: ${JSON.stringify(data.data, null, 2)}`, 'incoming');
+                    } else if (data.codere) {
+                        log(`Received Codere data with ${data.codere.leftMenu?.sports?.length || 0} sports`, 'incoming');
+                    }
+                } catch (e) {
+                    log(`Failed to parse message: ${e.message}`, 'error');
+                }
+            };
+
+            ws.onclose = () => {
+                log('Disconnected from WebSocket server', 'info');
+                updateStatus('Disconnected');
+            };
+
+            ws.onerror = (error) => {
+                log(`WebSocket error: ${error}`, 'error');
+                updateStatus('Error');
+            };
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        function send(data) {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                log('Not connected to WebSocket server', 'error');
+                return false;
+            }
+
+            const message = JSON.stringify(data);
+            ws.send(message);
+            log(`Sent: ${message}`, 'outgoing');
+            return true;
+        }
+
+        function subscribeToLeagues(nodeId) {
+            send({ action: 'getLeagues', nodeId });
+        }
+
+        function unsubscribeFromLeagues(nodeId) {
+            send({ action: 'unsubscribeLeagues', nodeId });
+        }
+
+        function subscribeToLeagueEvents(leagueNodeId) {
+            send({ action: 'getLeagueEvents', leagueNodeId });
+        }
+
+        function unsubscribeFromLeagueEvents(leagueNodeId) {
+            send({ action: 'unsubscribeLeagueEvents', leagueNodeId });
+        }
+
+        function getCacheStats() {
+            send({ action: 'getCacheStats' });
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            messageCount = 0;
+        }
+
+        // Auto-connect on page load
+        window.onload = () => {
+            connect();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sport Backgrounds Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .sport-container {
+            display: inline-block;
+            margin: 10px;
+            width: 200px;
+            height: 200px;
+            position: relative;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .sport-background {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.4;
+            filter: brightness(0.7) contrast(1.2);
+        }
+        .sport-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(30,41,59,0.6), rgba(51,65,85,0.5));
+        }
+        .sport-content {
+            position: relative;
+            z-index: 10;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
+        .sport-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .sport-file {
+            font-size: 10px;
+            color: #ccc;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sport Background SVG Test</h1>
+    <p>Testing if sport background SVGs are loading correctly from cache folder</p>
+    
+    <div id="sports-container"></div>
+
+    <script>
+        const sportsMapping = [
+            { name: 'Soccer/Football', file: 'soccer.svg' },
+            { name: 'Basketball', file: 'basketball.svg' },
+            { name: 'Tennis', file: 'tennis.svg' },
+            { name: 'Baseball', file: 'baseball.svg' },
+            { name: 'Ice Hockey', file: 'ice_hockey.svg' },
+            { name: 'Volleyball', file: 'volleyball.svg' },
+            { name: 'Handball', file: 'handball.svg' },
+            { name: 'Table Tennis', file: 'table_tennis.svg' },
+            { name: 'Badminton', file: 'badminton.svg' },
+            { name: 'Boxing', file: 'boxing.svg' },
+            { name: 'MMA', file: 'mma.svg' },
+            { name: 'Golf', file: 'golf.svg' },
+            { name: 'Cricket', file: 'cricket.svg' },
+            { name: 'Darts', file: 'darts.svg' },
+            { name: 'Futsal', file: 'futsal.svg' },
+            { name: 'Rugby', file: 'rugby.svg' },
+            { name: 'Snooker', file: 'snooker.svg' },
+            { name: 'E-Sports', file: 'esports.svg' },
+            { name: 'E-Football', file: 'efootball.svg' },
+            { name: 'E-Basketball', file: 'ebasket.svg' },
+            { name: 'American Football', file: 'american_football.svg' },
+            { name: 'Beach Volleyball', file: 'beach_volleyball.svg' },
+            { name: 'Horse Racing', file: 'horse_racing.svg' }
+        ];
+
+        const container = document.getElementById('sports-container');
+
+        sportsMapping.forEach(sport => {
+            const sportDiv = document.createElement('div');
+            sportDiv.className = 'sport-container';
+            
+            const backgroundUrl = `/cache/sport-backgrounds/${sport.file}`;
+            
+            sportDiv.innerHTML = `
+                <div class="sport-background" style="background-image: url(${backgroundUrl})"></div>
+                <div class="sport-overlay"></div>
+                <div class="sport-content">
+                    <div class="sport-name">${sport.name}</div>
+                    <div class="sport-file">${sport.file}</div>
+                </div>
+            `;
+            
+            container.appendChild(sportDiv);
+        });
+
+        // Test console logging
+        console.log('🔍 [SPORT BACKGROUND TEST] Testing sport background mapping...');
+        sportsMapping.forEach(sport => {
+            const url = `/cache/sport-backgrounds/${sport.file}`;
+            console.log(`🔍 [SPORT BACKGROUND] "${sport.name}" → "${url}"`);
+        });
+    </script>
+</body>
+</html>

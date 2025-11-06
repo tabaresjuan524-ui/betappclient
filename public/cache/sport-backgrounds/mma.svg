@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- MMA/UFC Octagon -->
+  <defs>
+    <linearGradient id="mmaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#f7931e;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Octagon Ring -->
+  <polygon points="100,20 141.42,41.42 162.84,82.84 162.84,117.16 141.42,158.58 100,180 58.58,158.58 37.16,117.16 37.16,82.84 58.58,41.42" 
+           fill="url(#mmaGrad)" stroke="#ff6b35" stroke-width="3"/>
+  
+  <!-- Inner Octagon -->
+  <polygon points="100,40 128.28,51.72 140,80 140,120 128.28,148.28 100,160 71.72,148.28 60,120 60,80 71.72,51.72" 
+           fill="none" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5,5"/>
+  
+  <!-- Center Circle -->
+  <circle cx="100" cy="100" r="25" fill="none" stroke="#ff6b35" stroke-width="2"/>
+  
+  <!-- Fighting Gloves -->
+  <ellipse cx="80" cy="90" rx="12" ry="8" fill="#ff6b35" opacity="0.7"/>
+  <ellipse cx="120" cy="110" rx="12" ry="8" fill="#ff6b35" opacity="0.7"/>
+</svg>

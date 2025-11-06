@@ -1,0 +1,3620 @@
+[
+  {
+    "fixture": {
+      "id": 1383453,
+      "referee": "Damian Sylwestrzak, Poland",
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": 1176,
+        "name": "Brann Stadion",
+        "city": "Bergen"
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 14,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 2,
+      "name": "UEFA Champions League",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/2.png",
+      "flag": null,
+      "season": 2025,
+      "round": "2nd Qualifying Round",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 319,
+        "name": "Brann",
+        "logo": "https://media.api-sports.io/football/teams/319.png",
+        "winner": null
+      },
+      "away": {
+        "id": 571,
+        "name": "Red Bull Salzburg",
+        "logo": "https://media.api-sports.io/football/teams/571.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 6,
+          "extra": null
+        },
+        "team": {
+          "id": 319,
+          "name": "Brann",
+          "logo": "https://media.api-sports.io/football/teams/319.png"
+        },
+        "player": {
+          "id": 15832,
+          "name": "J. Sorensen"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": "Tripping"
+      },
+      {
+        "time": {
+          "elapsed": 8,
+          "extra": null
+        },
+        "team": {
+          "id": 319,
+          "name": "Brann",
+          "logo": "https://media.api-sports.io/football/teams/319.png"
+        },
+        "player": {
+          "id": 64339,
+          "name": "J. Sery Larsen"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": "Foul"
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1383514,
+      "referee": "Bram Van Driessche, Belgium",
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": 459,
+        "name": "JYSK Park",
+        "city": "Silkeborg"
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 14,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 848,
+      "name": "UEFA Europa Conference League",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/848.png",
+      "flag": null,
+      "season": 2025,
+      "round": "2nd Qualifying Round",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 2073,
+        "name": "Silkeborg",
+        "logo": "https://media.api-sports.io/football/teams/2073.png",
+        "winner": null
+      },
+      "away": {
+        "id": 272,
+        "name": "KA Akureyri",
+        "logo": "https://media.api-sports.io/football/teams/272.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1390777,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": 868,
+        "name": "Sammy Ofer Stadium",
+        "city": "Haifa"
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 14,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 385,
+      "name": "Toto Cup Ligat Al",
+      "country": "Israel",
+      "logo": "https://media.api-sports.io/football/leagues/385.png",
+      "flag": "https://media.api-sports.io/flags/il.svg",
+      "season": 2025,
+      "round": "Group stage - Group A",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 2253,
+        "name": "Hapoel Haifa",
+        "logo": "https://media.api-sports.io/football/teams/2253.png",
+        "winner": false
+      },
+      "away": {
+        "id": 4510,
+        "name": "Ironi Kiryat Shmona",
+        "logo": "https://media.api-sports.io/football/teams/4510.png",
+        "winner": true
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 1
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 13,
+          "extra": null
+        },
+        "team": {
+          "id": 4510,
+          "name": "Ironi Kiryat Shmona",
+          "logo": "https://media.api-sports.io/football/teams/4510.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1390778,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:45:00+00:00",
+      "timestamp": 1753289100,
+      "periods": {
+        "first": 1753289100,
+        "second": null
+      },
+      "venue": {
+        "id": 3407,
+        "name": "Green Stadium",
+        "city": "Nazareth Illit"
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 29,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 385,
+      "name": "Toto Cup Ligat Al",
+      "country": "Israel",
+      "logo": "https://media.api-sports.io/football/leagues/385.png",
+      "flag": "https://media.api-sports.io/flags/il.svg",
+      "season": 2025,
+      "round": "Group stage - Group A",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 6181,
+        "name": "Ironi Tiberias",
+        "logo": "https://media.api-sports.io/football/teams/6181.png",
+        "winner": true
+      },
+      "away": {
+        "id": 6186,
+        "name": "Maccabi Bnei Raina",
+        "logo": "https://media.api-sports.io/football/teams/6186.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 2,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 2,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 14,
+          "extra": null
+        },
+        "team": {
+          "id": 6181,
+          "name": "Ironi Tiberias",
+          "logo": "https://media.api-sports.io/football/teams/6181.png"
+        },
+        "player": {
+          "id": 105819,
+          "name": "G. Hadida"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 28,
+          "extra": null
+        },
+        "team": {
+          "id": 6181,
+          "name": "Ironi Tiberias",
+          "logo": "https://media.api-sports.io/football/teams/6181.png"
+        },
+        "player": {
+          "id": 111278,
+          "name": "D. Keltjens"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1410005,
+      "referee": "Johan Hendrik Ellefsen, Faroe Islands",
+      "timezone": "UTC",
+      "date": "2025-07-23T16:30:00+00:00",
+      "timestamp": 1753288200,
+      "periods": {
+        "first": 1753288200,
+        "second": null
+      },
+      "venue": {
+        "id": 605,
+        "name": "A. Le Coq Arena",
+        "city": "Tallinn"
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 45,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 848,
+      "name": "UEFA Europa Conference League",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/848.png",
+      "flag": null,
+      "season": 2025,
+      "round": "2nd Qualifying Round",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 2273,
+        "name": "FC Levadia Tallinn",
+        "logo": "https://media.api-sports.io/football/teams/2273.png",
+        "winner": null
+      },
+      "away": {
+        "id": 3502,
+        "name": "Saburtalo",
+        "logo": "https://media.api-sports.io/football/teams/3502.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 3,
+          "extra": null
+        },
+        "team": {
+          "id": 2273,
+          "name": "FC Levadia Tallinn",
+          "logo": "https://media.api-sports.io/football/teams/2273.png"
+        },
+        "player": {
+          "id": 352524,
+          "name": "B. Tambedou"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411490,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 15,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 9579,
+        "name": "Athletic Club II",
+        "logo": "https://media.api-sports.io/football/teams/9579.png",
+        "winner": null
+      },
+      "away": {
+        "id": 725,
+        "name": "Cultural Leonesa",
+        "logo": "https://media.api-sports.io/football/teams/725.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411518,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:30:00+00:00",
+      "timestamp": 1753288200,
+      "periods": {
+        "first": 1753288200,
+        "second": null
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 42,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 431,
+        "name": "Quevilly",
+        "logo": "https://media.api-sports.io/football/teams/431.png",
+        "winner": null
+      },
+      "away": {
+        "id": 1298,
+        "name": "Le Mans",
+        "logo": "https://media.api-sports.io/football/teams/1298.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 1,
+        "away": 1
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 11,
+          "extra": null
+        },
+        "team": {
+          "id": 1298,
+          "name": "Le Mans",
+          "logo": "https://media.api-sports.io/football/teams/1298.png"
+        },
+        "player": {
+          "id": null,
+          "name": "M. Rossignol"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 21,
+          "extra": null
+        },
+        "team": {
+          "id": 431,
+          "name": "Quevilly",
+          "logo": "https://media.api-sports.io/football/teams/431.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411520,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 12,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 1277,
+        "name": "De Treffers",
+        "logo": "https://media.api-sports.io/football/teams/1277.png",
+        "winner": false
+      },
+      "away": {
+        "id": 413,
+        "name": "NEC Nijmegen",
+        "logo": "https://media.api-sports.io/football/teams/413.png",
+        "winner": true
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 1
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 7,
+          "extra": null
+        },
+        "team": {
+          "id": 413,
+          "name": "NEC Nijmegen",
+          "logo": "https://media.api-sports.io/football/teams/413.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411521,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 11,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 726,
+        "name": "Huesca",
+        "logo": "https://media.api-sports.io/football/teams/726.png",
+        "winner": null
+      },
+      "away": {
+        "id": 9584,
+        "name": "Osasuna II",
+        "logo": "https://media.api-sports.io/football/teams/9584.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411522,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 12,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 4665,
+        "name": "Racing Santander",
+        "logo": "https://media.api-sports.io/football/teams/4665.png",
+        "winner": null
+      },
+      "away": {
+        "id": 9632,
+        "name": "Real Avilés",
+        "logo": "https://media.api-sports.io/football/teams/9632.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411535,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T17:00:00+00:00",
+      "timestamp": 1753290000,
+      "periods": {
+        "first": 1753290000,
+        "second": null
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "First Half",
+        "short": "1H",
+        "elapsed": 11,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 547,
+        "name": "Girona",
+        "logo": "https://media.api-sports.io/football/teams/547.png",
+        "winner": null
+      },
+      "away": {
+        "id": 540,
+        "name": "Espanyol",
+        "logo": "https://media.api-sports.io/football/teams/540.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1356443,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T15:30:00+00:00",
+      "timestamp": 1753284600,
+      "periods": {
+        "first": 1753284600,
+        "second": 1753288200
+      },
+      "venue": {
+        "id": 615,
+        "name": "Bolt Arena",
+        "city": "Helsinki"
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 87,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 1087,
+      "name": "Ykkösliiga",
+      "country": "Finland",
+      "logo": "https://media.api-sports.io/football/leagues/1087.png",
+      "flag": "https://media.api-sports.io/flags/fi.svg",
+      "season": 2025,
+      "round": "Regular Season - 9",
+      "standings": true
+    },
+    "teams": {
+      "home": {
+        "id": 2085,
+        "name": "Klubi-04",
+        "logo": "https://media.api-sports.io/football/teams/2085.png",
+        "winner": true
+      },
+      "away": {
+        "id": 9189,
+        "name": "SalPa",
+        "logo": "https://media.api-sports.io/football/teams/9189.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 3,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 2,
+        "away": 1
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 21,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "S. Baranov"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 27,
+          "extra": null
+        },
+        "team": {
+          "id": 9189,
+          "name": "SalPa",
+          "logo": "https://media.api-sports.io/football/teams/9189.png"
+        },
+        "player": {
+          "id": null,
+          "name": "J. Salonen"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 30,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": 340121,
+          "name": "O. Hannula"
+        },
+        "assist": {
+          "id": null,
+          "name": "C. Arop"
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 39,
+          "extra": null
+        },
+        "team": {
+          "id": 9189,
+          "name": "SalPa",
+          "logo": "https://media.api-sports.io/football/teams/9189.png"
+        },
+        "player": {
+          "id": null,
+          "name": "E. Rrustemi"
+        },
+        "assist": {
+          "id": null,
+          "name": "M. Olanrewaju"
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 44,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "A. Le Goff-Conan"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 45,
+          "extra": 3
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": 358421,
+          "name": "J. Lietsa"
+        },
+        "assist": {
+          "id": null,
+          "name": "V. Vuorinen"
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 46,
+          "extra": null
+        },
+        "team": {
+          "id": 9189,
+          "name": "SalPa",
+          "logo": "https://media.api-sports.io/football/teams/9189.png"
+        },
+        "player": {
+          "id": null,
+          "name": "M. Olanrewaju"
+        },
+        "assist": {
+          "id": 173799,
+          "name": "M. Rautiola"
+        },
+        "type": "subst",
+        "detail": "Substitution 1",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 46,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "S. Baranov"
+        },
+        "assist": {
+          "id": null,
+          "name": "E. Ingman"
+        },
+        "type": "subst",
+        "detail": "Substitution 1",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 56,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "A. Le Goff-Conan"
+        },
+        "assist": {
+          "id": null,
+          "name": "V. Konttas"
+        },
+        "type": "subst",
+        "detail": "Substitution 2",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 57,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "K. Harden"
+        },
+        "assist": {
+          "id": null,
+          "name": "V. Vuorinen"
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 61,
+          "extra": null
+        },
+        "team": {
+          "id": 9189,
+          "name": "SalPa",
+          "logo": "https://media.api-sports.io/football/teams/9189.png"
+        },
+        "player": {
+          "id": null,
+          "name": "E. Rrustemi"
+        },
+        "assist": {
+          "id": 353742,
+          "name": "O. Lehtisalo"
+        },
+        "type": "subst",
+        "detail": "Substitution 2",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 62,
+          "extra": null
+        },
+        "team": {
+          "id": 9189,
+          "name": "SalPa",
+          "logo": "https://media.api-sports.io/football/teams/9189.png"
+        },
+        "player": {
+          "id": null,
+          "name": "J. Salonen"
+        },
+        "assist": {
+          "id": null,
+          "name": "O. Rautiainen"
+        },
+        "type": "subst",
+        "detail": "Substitution 3",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 62,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "C. Arop"
+        },
+        "assist": {
+          "id": null,
+          "name": "A. Traore"
+        },
+        "type": "subst",
+        "detail": "Substitution 3",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 62,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "A. Berisha"
+        },
+        "assist": {
+          "id": null,
+          "name": "I. Toivonen"
+        },
+        "type": "subst",
+        "detail": "Substitution 4",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 74,
+          "extra": null
+        },
+        "team": {
+          "id": 2085,
+          "name": "Klubi-04",
+          "logo": "https://media.api-sports.io/football/teams/2085.png"
+        },
+        "player": {
+          "id": null,
+          "name": "V. Konttas"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 75,
+          "extra": null
+        },
+        "team": {
+          "id": 9189,
+          "name": "SalPa",
+          "logo": "https://media.api-sports.io/football/teams/9189.png"
+        },
+        "player": {
+          "id": null,
+          "name": "M. Gassama"
+        },
+        "assist": {
+          "id": 451051,
+          "name": "E. Boateng"
+        },
+        "type": "subst",
+        "detail": "Substitution 4",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 83,
+          "extra": null
+        },
+        "team": {
+          "id": 9189,
+          "name": "SalPa",
+          "logo": "https://media.api-sports.io/football/teams/9189.png"
+        },
+        "player": {
+          "id": 451051,
+          "name": "E. Boateng"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1356631,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": 10605,
+        "name": "Viimsi Staadion",
+        "city": "Haabneeme"
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 58,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 328,
+      "name": "Esiliiga A",
+      "country": "Estonia",
+      "logo": "https://media.api-sports.io/football/leagues/328.png",
+      "flag": "https://media.api-sports.io/flags/ee.svg",
+      "season": 2025,
+      "round": "Regular Season - 17",
+      "standings": true
+    },
+    "teams": {
+      "home": {
+        "id": 14340,
+        "name": "Viimsi",
+        "logo": "https://media.api-sports.io/football/teams/14340.png",
+        "winner": false
+      },
+      "away": {
+        "id": 3524,
+        "name": "Tartu Welco",
+        "logo": "https://media.api-sports.io/football/teams/3524.png",
+        "winner": true
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 1
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 9,
+          "extra": null
+        },
+        "team": {
+          "id": 14340,
+          "name": "Viimsi",
+          "logo": "https://media.api-sports.io/football/teams/14340.png"
+        },
+        "player": {
+          "id": null,
+          "name": "R. Laidvee"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 21,
+          "extra": null
+        },
+        "team": {
+          "id": 14340,
+          "name": "Viimsi",
+          "logo": "https://media.api-sports.io/football/teams/14340.png"
+        },
+        "player": {
+          "id": null,
+          "name": "M. Fofana"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 43,
+          "extra": null
+        },
+        "team": {
+          "id": 3524,
+          "name": "Tartu Welco",
+          "logo": "https://media.api-sports.io/football/teams/3524.png"
+        },
+        "player": {
+          "id": null,
+          "name": "M. Mugra"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 57,
+          "extra": null
+        },
+        "team": {
+          "id": 14340,
+          "name": "Viimsi",
+          "logo": "https://media.api-sports.io/football/teams/14340.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1383506,
+      "referee": "Christos Vergetis",
+      "timezone": "UTC",
+      "date": "2025-07-23T15:30:00+00:00",
+      "timestamp": 1753284600,
+      "periods": {
+        "first": 1753284600,
+        "second": 1753288200
+      },
+      "venue": {
+        "id": null,
+        "name": "Neftçi Arena",
+        "city": "Bakı (Baku)"
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 86,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 848,
+      "name": "UEFA Europa Conference League",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/848.png",
+      "flag": null,
+      "season": 2025,
+      "round": "2nd Qualifying Round",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 648,
+        "name": "Zira",
+        "logo": "https://media.api-sports.io/football/teams/648.png",
+        "winner": null
+      },
+      "away": {
+        "id": 608,
+        "name": "HNK Hajduk Split",
+        "logo": "https://media.api-sports.io/football/teams/608.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 1,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 31,
+          "extra": null
+        },
+        "team": {
+          "id": 648,
+          "name": "Zira",
+          "logo": "https://media.api-sports.io/football/teams/648.png"
+        },
+        "player": {
+          "id": 20806,
+          "name": "B. Konate"
+        },
+        "assist": {
+          "id": 21386,
+          "name": "I. Gomis"
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 35,
+          "extra": null
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": 14417,
+          "name": "Z. Sarlija"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 39,
+          "extra": null
+        },
+        "team": {
+          "id": 648,
+          "name": "Zira",
+          "logo": "https://media.api-sports.io/football/teams/648.png"
+        },
+        "player": {
+          "id": 20806,
+          "name": "B. Konate"
+        },
+        "assist": {
+          "id": 271722,
+          "name": "C. Nuriyev"
+        },
+        "type": "subst",
+        "detail": "Substitution 1",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 45,
+          "extra": 1
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": 340671,
+          "name": "M. Capan"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 46,
+          "extra": null
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": 340671,
+          "name": "M. Capan"
+        },
+        "assist": {
+          "id": 278059,
+          "name": "A. Pajaziti"
+        },
+        "type": "subst",
+        "detail": "Substitution 1",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 47,
+          "extra": null
+        },
+        "team": {
+          "id": 648,
+          "name": "Zira",
+          "logo": "https://media.api-sports.io/football/teams/648.png"
+        },
+        "player": {
+          "id": 41648,
+          "name": "Guima"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Card",
+        "detail": "Yellow Card",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 68,
+          "extra": null
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": 14342,
+          "name": "A. Kalik"
+        },
+        "assist": {
+          "id": null,
+          "name": "S. Hrgovic"
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 70,
+          "extra": null
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": 394909,
+          "name": "N. Skoko"
+        },
+        "assist": {
+          "id": 1267,
+          "name": "Y. Benrahou"
+        },
+        "type": "subst",
+        "detail": "Substitution 2",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 70,
+          "extra": null
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": null,
+          "name": "N. Sigur"
+        },
+        "assist": {
+          "id": 14386,
+          "name": "F. Karacic"
+        },
+        "type": "subst",
+        "detail": "Substitution 3",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 70,
+          "extra": null
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": null,
+          "name": "R. Brajkovic"
+        },
+        "assist": {
+          "id": 14352,
+          "name": "M. Sego"
+        },
+        "type": "subst",
+        "detail": "Substitution 4",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 79,
+          "extra": null
+        },
+        "team": {
+          "id": 648,
+          "name": "Zira",
+          "logo": "https://media.api-sports.io/football/teams/648.png"
+        },
+        "player": {
+          "id": 106382,
+          "name": "D. Volkovi"
+        },
+        "assist": {
+          "id": 106378,
+          "name": "R. Muradov"
+        },
+        "type": "subst",
+        "detail": "Substitution 2",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 79,
+          "extra": null
+        },
+        "team": {
+          "id": 648,
+          "name": "Zira",
+          "logo": "https://media.api-sports.io/football/teams/648.png"
+        },
+        "player": {
+          "id": 271722,
+          "name": "C. Nuriyev"
+        },
+        "assist": {
+          "id": 524923,
+          "name": "A. Batibie"
+        },
+        "type": "subst",
+        "detail": "Substitution 3",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 79,
+          "extra": null
+        },
+        "team": {
+          "id": 648,
+          "name": "Zira",
+          "logo": "https://media.api-sports.io/football/teams/648.png"
+        },
+        "player": {
+          "id": 41648,
+          "name": "Guima"
+        },
+        "assist": {
+          "id": 1545,
+          "name": "I. Ibrahimli"
+        },
+        "type": "subst",
+        "detail": "Substitution 4",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 85,
+          "extra": null
+        },
+        "team": {
+          "id": 608,
+          "name": "HNK Hajduk Split",
+          "logo": "https://media.api-sports.io/football/teams/608.png"
+        },
+        "player": {
+          "id": 14342,
+          "name": "A. Kalik"
+        },
+        "assist": {
+          "id": 340571,
+          "name": "R. Pukstas"
+        },
+        "type": "subst",
+        "detail": "Substitution 5",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1390570,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": 12096,
+        "name": "Stade Centre Formation EAG 1",
+        "city": "Pabu"
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 57,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 90,
+        "name": "Guingamp",
+        "logo": "https://media.api-sports.io/football/teams/90.png",
+        "winner": null
+      },
+      "away": {
+        "id": 1300,
+        "name": "Concarneau",
+        "logo": "https://media.api-sports.io/football/teams/1300.png",
+        "winner": null
+      }
+    },
+    "goals": {
+      "home": 2,
+      "away": 2
+    },
+    "score": {
+      "halftime": {
+        "home": 2,
+        "away": 2
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 21,
+          "extra": null
+        },
+        "team": {
+          "id": 1300,
+          "name": "Concarneau",
+          "logo": "https://media.api-sports.io/football/teams/1300.png"
+        },
+        "player": {
+          "id": 287114,
+          "name": "A. Samoura"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 28,
+          "extra": null
+        },
+        "team": {
+          "id": 90,
+          "name": "Guingamp",
+          "logo": "https://media.api-sports.io/football/teams/90.png"
+        },
+        "player": {
+          "id": 127625,
+          "name": "A. Sagna"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 32,
+          "extra": null
+        },
+        "team": {
+          "id": 1300,
+          "name": "Concarneau",
+          "logo": "https://media.api-sports.io/football/teams/1300.png"
+        },
+        "player": {
+          "id": 21254,
+          "name": "B. Etcheverria"
+        },
+        "assist": {
+          "id": 333100,
+          "name": "G. Tutu"
+        },
+        "type": "subst",
+        "detail": "Substitution 1",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 35,
+          "extra": null
+        },
+        "team": {
+          "id": 90,
+          "name": "Guingamp",
+          "logo": "https://media.api-sports.io/football/teams/90.png"
+        },
+        "player": {
+          "id": 127625,
+          "name": "A. Sagna"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 41,
+          "extra": null
+        },
+        "team": {
+          "id": 1300,
+          "name": "Concarneau",
+          "logo": "https://media.api-sports.io/football/teams/1300.png"
+        },
+        "player": {
+          "id": 178645,
+          "name": "Y. Soukouna"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1392262,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T15:30:00+00:00",
+      "timestamp": 1753284600,
+      "periods": {
+        "first": 1753284600,
+        "second": 1753288200
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 82,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 347,
+      "name": "Cup",
+      "country": "Czech-Republic",
+      "logo": "https://media.api-sports.io/football/leagues/347.png",
+      "flag": "https://media.api-sports.io/flags/cz.svg",
+      "season": 2025,
+      "round": "Group Stage - 1",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 26125,
+        "name": "Jakubcovice",
+        "logo": "https://media.api-sports.io/football/teams/26125.png",
+        "winner": false
+      },
+      "away": {
+        "id": 7323,
+        "name": "Nový Jičín",
+        "logo": "https://media.api-sports.io/football/teams/7323.png",
+        "winner": true
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 81,
+          "extra": null
+        },
+        "team": {
+          "id": 7323,
+          "name": "Nový Jičín",
+          "logo": "https://media.api-sports.io/football/teams/7323.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411494,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 50,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 433,
+        "name": "Laval",
+        "logo": "https://media.api-sports.io/football/teams/433.png",
+        "winner": true
+      },
+      "away": {
+        "id": 3221,
+        "name": "Rouen",
+        "logo": "https://media.api-sports.io/football/teams/3221.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 1,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 10,
+          "extra": null
+        },
+        "team": {
+          "id": 433,
+          "name": "Laval",
+          "logo": "https://media.api-sports.io/football/teams/433.png"
+        },
+        "player": {
+          "id": 190959,
+          "name": "M. Sellouki"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411495,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 59,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 3069,
+        "name": "Le Puy Foot",
+        "logo": "https://media.api-sports.io/football/teams/3069.png",
+        "winner": false
+      },
+      "away": {
+        "id": 430,
+        "name": "Bourg-en-bresse 01",
+        "logo": "https://media.api-sports.io/football/teams/430.png",
+        "winner": true
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 2
+    },
+    "score": {
+      "halftime": {
+        "home": 1,
+        "away": 2
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411499,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 63,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 1018,
+        "name": "NK Slaven Belupo",
+        "logo": "https://media.api-sports.io/football/teams/1018.png",
+        "winner": true
+      },
+      "away": {
+        "id": 1019,
+        "name": "Rudes",
+        "logo": "https://media.api-sports.io/football/teams/1019.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 2,
+      "away": 1
+    },
+    "score": {
+      "halftime": {
+        "home": 2,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 11,
+          "extra": null
+        },
+        "team": {
+          "id": 1018,
+          "name": "NK Slaven Belupo",
+          "logo": "https://media.api-sports.io/football/teams/1018.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 20,
+          "extra": null
+        },
+        "team": {
+          "id": 1018,
+          "name": "NK Slaven Belupo",
+          "logo": "https://media.api-sports.io/football/teams/1018.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 51,
+          "extra": null
+        },
+        "team": {
+          "id": 1019,
+          "name": "Rudes",
+          "logo": "https://media.api-sports.io/football/teams/1019.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411504,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T15:00:00+00:00",
+      "timestamp": 1753282800,
+      "periods": {
+        "first": 1753282800,
+        "second": 1753286400
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 90,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 619,
+        "name": "PAOK",
+        "logo": "https://media.api-sports.io/football/teams/619.png",
+        "winner": true
+      },
+      "away": {
+        "id": 602,
+        "name": "Apollon Limassol",
+        "logo": "https://media.api-sports.io/football/teams/602.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 3,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411507,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T15:30:00+00:00",
+      "timestamp": 1753284600,
+      "periods": {
+        "first": 1753284600,
+        "second": 1753288200
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 55,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 4346,
+        "name": "Struga",
+        "logo": "https://media.api-sports.io/football/teams/4346.png",
+        "winner": true
+      },
+      "away": {
+        "id": 14395,
+        "name": "Llapi",
+        "logo": "https://media.api-sports.io/football/teams/14395.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 1,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411508,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T15:30:00+00:00",
+      "timestamp": 1753284600,
+      "periods": {
+        "first": 1753284600,
+        "second": 1753288200
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 86,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 517,
+        "name": "Venezia",
+        "logo": "https://media.api-sports.io/football/teams/517.png",
+        "winner": true
+      },
+      "away": {
+        "id": 17820,
+        "name": "Dolomiti Bellunesi",
+        "logo": "https://media.api-sports.io/football/teams/17820.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 4,
+      "away": 2
+    },
+    "score": {
+      "halftime": {
+        "home": 2,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 9,
+          "extra": null
+        },
+        "team": {
+          "id": 517,
+          "name": "Venezia",
+          "logo": "https://media.api-sports.io/football/teams/517.png"
+        },
+        "player": {
+          "id": 212,
+          "name": "A. Adorante"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 24,
+          "extra": null
+        },
+        "team": {
+          "id": 517,
+          "name": "Venezia",
+          "logo": "https://media.api-sports.io/football/teams/517.png"
+        },
+        "player": {
+          "id": 70362,
+          "name": "S. Korac"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 59,
+          "extra": null
+        },
+        "team": {
+          "id": 517,
+          "name": "Venezia",
+          "logo": "https://media.api-sports.io/football/teams/517.png"
+        },
+        "player": {
+          "id": 25414,
+          "name": "J. Yeboah"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 71,
+          "extra": null
+        },
+        "team": {
+          "id": 517,
+          "name": "Venezia",
+          "logo": "https://media.api-sports.io/football/teams/517.png"
+        },
+        "player": {
+          "id": 25414,
+          "name": "J. Yeboah"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 73,
+          "extra": null
+        },
+        "team": {
+          "id": 17820,
+          "name": "Dolomiti Bellunesi",
+          "logo": "https://media.api-sports.io/football/teams/17820.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 77,
+          "extra": null
+        },
+        "team": {
+          "id": 17820,
+          "name": "Dolomiti Bellunesi",
+          "logo": "https://media.api-sports.io/football/teams/17820.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411509,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 59,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 89,
+        "name": "Dijon",
+        "logo": "https://media.api-sports.io/football/teams/89.png",
+        "winner": true
+      },
+      "away": {
+        "id": 115,
+        "name": "Sochaux",
+        "logo": "https://media.api-sports.io/football/teams/115.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411510,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 60,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 3176,
+        "name": "Feignies-Aulnoye",
+        "logo": "https://media.api-sports.io/football/teams/3176.png",
+        "winner": false
+      },
+      "away": {
+        "id": 105,
+        "name": "Valenciennes",
+        "logo": "https://media.api-sports.io/football/teams/105.png",
+        "winner": true
+      }
+    },
+    "goals": {
+      "home": 0,
+      "away": 3
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 3
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": []
+  },
+  {
+    "fixture": {
+      "id": 1411511,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 66,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 7270,
+        "name": "Arsenal Česká Lípa",
+        "logo": "https://media.api-sports.io/football/teams/7270.png",
+        "winner": true
+      },
+      "away": {
+        "id": 7336,
+        "name": "Přepeře",
+        "logo": "https://media.api-sports.io/football/teams/7336.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 0,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 64,
+          "extra": null
+        },
+        "team": {
+          "id": 7270,
+          "name": "Arsenal Česká Lípa",
+          "logo": "https://media.api-sports.io/football/teams/7270.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411512,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 59,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 2062,
+        "name": "FC Helsingor",
+        "logo": "https://media.api-sports.io/football/teams/2062.png",
+        "winner": true
+      },
+      "away": {
+        "id": 11566,
+        "name": "Sundby",
+        "logo": "https://media.api-sports.io/football/teams/11566.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 1,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 1,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 45,
+          "extra": 2
+        },
+        "team": {
+          "id": 2062,
+          "name": "FC Helsingor",
+          "logo": "https://media.api-sports.io/football/teams/2062.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411513,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 58,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 167,
+        "name": "1899 Hoffenheim",
+        "logo": "https://media.api-sports.io/football/teams/167.png",
+        "winner": true
+      },
+      "away": {
+        "id": 1634,
+        "name": "FC 08 Homburg",
+        "logo": "https://media.api-sports.io/football/teams/1634.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 3,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 2,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 17,
+          "extra": null
+        },
+        "team": {
+          "id": 167,
+          "name": "1899 Hoffenheim",
+          "logo": "https://media.api-sports.io/football/teams/167.png"
+        },
+        "player": {
+          "id": 387973,
+          "name": "M. Moerstedt"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 29,
+          "extra": null
+        },
+        "team": {
+          "id": 167,
+          "name": "1899 Hoffenheim",
+          "logo": "https://media.api-sports.io/football/teams/167.png"
+        },
+        "player": {
+          "id": 279907,
+          "name": "U. Tohumcu"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 49,
+          "extra": null
+        },
+        "team": {
+          "id": 167,
+          "name": "1899 Hoffenheim",
+          "logo": "https://media.api-sports.io/football/teams/167.png"
+        },
+        "player": {
+          "id": 328262,
+          "name": "M. Damar"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411515,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 64,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 801,
+        "name": "Pisa",
+        "logo": "https://media.api-sports.io/football/teams/801.png",
+        "winner": true
+      },
+      "away": {
+        "id": 9430,
+        "name": "Bra",
+        "logo": "https://media.api-sports.io/football/teams/9430.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 3,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 2,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 28,
+          "extra": null
+        },
+        "team": {
+          "id": 801,
+          "name": "Pisa",
+          "logo": "https://media.api-sports.io/football/teams/801.png"
+        },
+        "player": {
+          "id": 127625,
+          "name": "A. Sagna"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 32,
+          "extra": null
+        },
+        "team": {
+          "id": 801,
+          "name": "Pisa",
+          "logo": "https://media.api-sports.io/football/teams/801.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 63,
+          "extra": null
+        },
+        "team": {
+          "id": 801,
+          "name": "Pisa",
+          "logo": "https://media.api-sports.io/football/teams/801.png"
+        },
+        "player": {
+          "id": null,
+          "name": null
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  },
+  {
+    "fixture": {
+      "id": 1411516,
+      "referee": null,
+      "timezone": "UTC",
+      "date": "2025-07-23T16:00:00+00:00",
+      "timestamp": 1753286400,
+      "periods": {
+        "first": 1753286400,
+        "second": 1753290000
+      },
+      "venue": {
+        "id": null,
+        "name": null,
+        "city": null
+      },
+      "status": {
+        "long": "Second Half",
+        "short": "2H",
+        "elapsed": 58,
+        "extra": null
+      }
+    },
+    "league": {
+      "id": 667,
+      "name": "Friendlies Clubs",
+      "country": "World",
+      "logo": "https://media.api-sports.io/football/leagues/667.png",
+      "flag": null,
+      "season": 2025,
+      "round": "Club Friendlies 5",
+      "standings": false
+    },
+    "teams": {
+      "home": {
+        "id": 488,
+        "name": "Sassuolo",
+        "logo": "https://media.api-sports.io/football/teams/488.png",
+        "winner": true
+      },
+      "away": {
+        "id": 17147,
+        "name": "Trento",
+        "logo": "https://media.api-sports.io/football/teams/17147.png",
+        "winner": false
+      }
+    },
+    "goals": {
+      "home": 2,
+      "away": 0
+    },
+    "score": {
+      "halftime": {
+        "home": 1,
+        "away": 0
+      },
+      "fulltime": {
+        "home": null,
+        "away": null
+      },
+      "extratime": {
+        "home": null,
+        "away": null
+      },
+      "penalty": {
+        "home": null,
+        "away": null
+      }
+    },
+    "events": [
+      {
+        "time": {
+          "elapsed": 6,
+          "extra": null
+        },
+        "team": {
+          "id": 488,
+          "name": "Sassuolo",
+          "logo": "https://media.api-sports.io/football/teams/488.png"
+        },
+        "player": {
+          "id": 31094,
+          "name": "A. Pinamonti"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      },
+      {
+        "time": {
+          "elapsed": 53,
+          "extra": null
+        },
+        "team": {
+          "id": 488,
+          "name": "Sassuolo",
+          "logo": "https://media.api-sports.io/football/teams/488.png"
+        },
+        "player": {
+          "id": 271350,
+          "name": "T. Muharemovic"
+        },
+        "assist": {
+          "id": null,
+          "name": null
+        },
+        "type": "Goal",
+        "detail": "Normal Goal",
+        "comments": null
+      }
+    ]
+  }
+]
