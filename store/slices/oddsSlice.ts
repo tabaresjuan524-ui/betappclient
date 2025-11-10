@@ -17,13 +17,6 @@ export interface OddsState {
   codere: {
     leftMenu: CodereLeftMenuData
   };
-  sofascore: {
-    liveEvents: LiveEvent[];
-    sports: Sport[];
-    liveSports: any[];
-    tournaments: { [key: string]: any };
-    players: { [key: string]: any };
-  };
   selectedLeague: {
     name: string | null;
     nodeId: string | null;
@@ -40,13 +33,6 @@ const initialState: OddsState = {
   loading: true,
   error: null,
   codere: { leftMenu: { sports: [], highlights: [], highlightsConfig: [] } },
-  sofascore: {
-    liveEvents: [],
-    sports: [],
-    liveSports: [],
-    tournaments: {},
-    players: {}
-  },
   selectedLeague: {
     name: null,
     nodeId: null,
@@ -105,43 +91,6 @@ const oddsSlice = createSlice({
       state.selectedLeague.nodeId = null;
       state.selectedLeague.events = [];
       state.selectedLeague.categories = null;
-    },
-    updateSofascoreData(state, action: PayloadAction<{
-      liveEvents?: LiveEvent[];
-      sports?: Sport[];
-      liveSports?: any[];
-      tournaments?: { [key: string]: any };
-      players?: { [key: string]: any };
-    }>) {
-      console.log(`🔍 [REDUX DEBUG] updateSofascoreData called with:`, {
-        liveEventsCount: action.payload.liveEvents?.length || 0,
-        sportsCount: action.payload.sports?.length || 0,
-        liveSportsCount: action.payload.liveSports?.length || 0,
-        tournamentsKeys: Object.keys(action.payload.tournaments || {}),
-        playersKeys: Object.keys(action.payload.players || {}),
-        firstLiveEvent: action.payload.liveEvents?.[0]
-      });
-      
-      if (action.payload.liveEvents) {
-        state.sofascore.liveEvents = action.payload.liveEvents;
-        console.log(`🔍 [REDUX DEBUG] Updated liveEvents, new count: ${state.sofascore.liveEvents.length}`);
-      }
-      if (action.payload.sports) {
-        state.sofascore.sports = action.payload.sports;
-        console.log(`🔍 [REDUX DEBUG] Updated sports, new count: ${state.sofascore.sports.length}`);
-      }
-      if (action.payload.liveSports) {
-        state.sofascore.liveSports = action.payload.liveSports;
-        console.log(`🔍 [REDUX DEBUG] Updated liveSports, new count: ${state.sofascore.liveSports.length}`);
-      }
-      if (action.payload.tournaments) {
-        state.sofascore.tournaments = action.payload.tournaments;
-        console.log(`🔍 [REDUX DEBUG] Updated tournaments, keys: ${Object.keys(state.sofascore.tournaments)}`);
-      }
-      if (action.payload.players) {
-        state.sofascore.players = action.payload.players;
-        console.log(`🔍 [REDUX DEBUG] Updated players, keys: ${Object.keys(state.sofascore.players)}`);
-      }
     }
 
   },
@@ -159,7 +108,6 @@ export const {
   updateLeagueEvents,
   updateLeagueCategories,
   clearSelectedLeague,
-  updateSofascoreData,
 } = oddsSlice.actions;
 
 export default oddsSlice.reducer;

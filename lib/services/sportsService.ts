@@ -8,8 +8,7 @@ import {
   updateCodereData,
   updateSportLeagues,
   updateLeagueEvents,
-  updateLeagueCategories,
-  updateSofascoreData
+  updateLeagueCategories
 } from "../../store/slices/oddsSlice";
 
 // --- Definiciones de Tipos (se mantienen igual) ---
@@ -286,13 +285,6 @@ interface CombinedData {
   codere?: {
     leftMenu?: CodereLeftMenuData;
   };
-  sofascore?: {
-    liveEvents?: LiveEvent[];
-    sports?: Sport[];
-    liveSports?: any[];
-    tournaments?: { [key: string]: any };
-    players?: { [key: string]: any };
-  };
   // For immediate responses
   type?: string;
   data?: any;
@@ -337,7 +329,7 @@ export const initSocket = () => {
 /**
  * Crea la conexión WebSocket
  */
-export const createWebSocketConnection = () => {
+const createWebSocketConnection = () => {
   try {
     // Determine the appropriate WebSocket URL
     let wsUrl: string;
@@ -379,12 +371,6 @@ export const createWebSocketConnection = () => {
   socket.onmessage = (event: MessageEvent) => {
     try {
       const data: CombinedData = JSON.parse(event.data);
-      console.log("🔍 [WEBSOCKET DEBUG] Received message:", {
-        messageType: data.messageType,
-        dataKeys: Object.keys(data),
-        updatesCount: data.updates?.length || 0,
-        timestamp: new Date().toISOString()
-      });
 
       // 🆕 Handle immediate data for new connections
       if (data.messageType === 'immediate') {
@@ -401,21 +387,6 @@ export const createWebSocketConnection = () => {
         // Process immediate Codere data
         if (data.codere?.leftMenu) {
           store.dispatch(updateCodereData(data.codere.leftMenu));
-        }
-        
-        // Process immediate SofaScore data
-        if (data.sofascore) {
-          console.log(`🔍 [FRONTEND DEBUG] Received immediate SofaScore data:`, {
-            liveEventsCount: data.sofascore.liveEvents?.length || 0,
-            sportsCount: data.sofascore.sports?.length || 0,
-            liveSportsCount: data.sofascore.liveSports?.length || 0,
-            tournamentsKeys: Object.keys(data.sofascore.tournaments || {}),
-            playersKeys: Object.keys(data.sofascore.players || {}),
-            firstLiveEvent: data.sofascore.liveEvents?.[0]
-          });
-          store.dispatch(updateSofascoreData(data.sofascore));
-        } else {
-          console.log(`🔍 [FRONTEND DEBUG] No SofaScore data in immediate response`);
         }
         
         // Clear loading state
@@ -447,20 +418,6 @@ export const createWebSocketConnection = () => {
                 
                 if (updateData.data.codere?.leftMenu) {
                   store.dispatch(updateCodereData(updateData.data.codere.leftMenu));
-                }
-                
-                if (updateData.data.sofascore) {
-                  console.log(`🔍 [FRONTEND DEBUG] Received SofaScore data via WebSocket:`, {
-                    liveEventsCount: updateData.data.sofascore.liveEvents?.length || 0,
-                    sportsCount: updateData.data.sofascore.sports?.length || 0,
-                    liveSportsCount: updateData.data.sofascore.liveSports?.length || 0,
-                    tournamentsKeys: Object.keys(updateData.data.sofascore.tournaments || {}),
-                    playersKeys: Object.keys(updateData.data.sofascore.players || {}),
-                    firstLiveEvent: updateData.data.sofascore.liveEvents?.[0]
-                  });
-                  store.dispatch(updateSofascoreData(updateData.data.sofascore));
-                } else {
-                  console.log(`🔍 [FRONTEND DEBUG] No SofaScore data in mainData update`);
                 }
               }
               break;
@@ -769,11 +726,6 @@ export const createWebSocketConnection = () => {
       if (data.codere?.leftMenu) {
         console.log("Updating Codere data");
         store.dispatch(updateCodereData(data.codere.leftMenu));
-      }
-      
-      if (data.sofascore) {
-        console.log("Updating SofaScore data");
-        store.dispatch(updateSofascoreData(data.sofascore));
       }
 
       // Clear any connection errors when receiving data successfully
