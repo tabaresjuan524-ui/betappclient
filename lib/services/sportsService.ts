@@ -285,6 +285,12 @@ interface CombinedData {
   codere?: {
     leftMenu?: CodereLeftMenuData;
   };
+  sofascore?: {
+    sportsWithLiveEvents: number;
+    totalEvents: number;
+    sports: { [sportName: string]: { events: { [eventId: string]: any } } };
+    lastUpdate: string;
+  };
   // For immediate responses
   type?: string;
   data?: any;
@@ -314,13 +320,62 @@ let isConnecting = false;
 let intentionallyClosing = false;
 
 /**
+ * Convert SofaScore data to LiveEvent format for frontend compatibility
+ */
+const convertSofascoreToLiveEvents = (sofascoreData: any): LiveEvent[] => {
+  const liveEvents: LiveEvent[] = [];
+  
+  if (!sofascoreData?.sports) {
+    return liveEvents;
+  }
+
+  Object.entries(sofascoreData.sports).forEach(([sportName, sportData]: [string, any]) => {
+    if (sportData?.events) {
+      Object.entries(sportData.events).forEach(([eventId, eventData]: [string, any]) => {
+        try {
+          const liveEvent: LiveEvent = {
+            api_name: 'sofascore',
+            id: parseInt(eventId, 10),
+            sport_group: sportName,
+            sport_title: eventData.tournament?.name || sportName,
+            league_logo: eventData.tournament?.logo || null,
+            home_team: eventData.homeTeam?.name || 'Home',
+            away_team: eventData.awayTeam?.name || 'Away',
+            commence_time: eventData.startTimestamp ? new Date(eventData.startTimestamp * 1000).toISOString() : new Date().toISOString(),
+            start_time: eventData.startTimestamp ? new Date(eventData.startTimestamp * 1000).toISOString() : new Date().toISOString(),
+            startTime: eventData.startTimestamp ? new Date(eventData.startTimestamp * 1000).toISOString() : new Date().toISOString(),
+            status: eventData.status?.description || (eventData.status?.code === 1 ? 'live' : 'not_started'),
+            match_time: eventData.status?.description || '',
+            scores: {
+              home: eventData.homeScore?.current?.toString() || '0',
+              away: eventData.awayScore?.current?.toString() || '0'
+            },
+            markets: [], // SofaScore doesn't provide betting markets in this data
+            bookmakers: [],
+            active: true,
+            bettingActive: false, // SofaScore is for live data, not betting
+            marketsCount: 0
+          };
+          
+          liveEvents.push(liveEvent);
+        } catch (error) {
+          console.warn('Failed to convert SofaScore event:', eventId, error);
+        }
+      });
+    }
+  });
+
+  return liveEvents;
+};
+
+/**
  * Inicializa la conexión WebSocket al servidor.
  */
 export const initSocket = () => {
   if (isConnecting || (socket && socket.readyState === WebSocket.OPEN)) {
     return; // Already connecting or connected
   }
-  
+
   isConnecting = true;
   intentionallyClosing = false;
   createWebSocketConnection();
@@ -333,27 +388,27 @@ const createWebSocketConnection = () => {
   try {
     // Determine the appropriate WebSocket URL
     let wsUrl: string;
-    
+
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
       // Use localhost for local development, IP for external connections
-      wsUrl = hostname === 'localhost' || hostname === '127.0.0.1' 
-        ? 'ws://localhost:8081' 
+      wsUrl = hostname === 'localhost' || hostname === '127.0.0.1'
+        ? 'ws://localhost:8081'
         : `ws://${hostname}:8081`;
     } else {
       wsUrl = 'ws://localhost:8081';
     }
-    
+
     socket = new WebSocket(wsUrl);
     socket.binaryType = 'arraybuffer';
-    
+
   } catch (error) {
     console.error("❌ Error creating WebSocket:", error);
     isConnecting = false;
     store.dispatch(setError("Error al crear la conexión WebSocket"));
     return;
   }
-  
+
   socket.onopen = () => {
     // Add visual confirmation for mobile debugging
     if (typeof window !== 'undefined') {
@@ -364,45 +419,69 @@ const createWebSocketConnection = () => {
     isConnecting = false;
     store.dispatch(setLoading(true));
     store.dispatch(setError(null));
-    
+
     // Immediately request initial data to avoid waiting for batching cycle
   };
 
   socket.onmessage = (event: MessageEvent) => {
     try {
       const data: CombinedData = JSON.parse(event.data);
-
+      
+      // Log received data for debugging
+      console.log('📡 WebSocket received data:', {
+        messageType: data.messageType,
+        hasSofascore: !!data.sofascore,
+        hasCodere: !!data.codere,
+        hasLiveEvents: !!data.liveEvents,
+        updatesCount: data.updates?.length || 0
+      });
+      
       // 🆕 Handle immediate data for new connections
       if (data.messageType === 'immediate') {
         // Process immediate sports data
         if (data.sports && Array.isArray(data.sports) && data.sports.length > 0) {
           store.dispatch(updateSports(data.sports));
         }
-        
+
         // Process immediate live events data
         if (data.liveEvents && Array.isArray(data.liveEvents) && data.liveEvents.length > 0) {
           store.dispatch(updateLiveEvents(data.liveEvents));
         }
-        
+
         // Process immediate Codere data
         if (data.codere?.leftMenu) {
           store.dispatch(updateCodereData(data.codere.leftMenu));
         }
-        
+
+        // 🆕 Process SofaScore data
+        if (data.sofascore) {
+          console.log('✅ [SOFASCORE] Received data:', {
+            totalEvents: data.sofascore.totalEvents,
+            sportsCount: Object.keys(data.sofascore.sports || {}).length,
+            lastUpdate: data.sofascore.lastUpdate
+          });
+          
+          // Convert SofaScore data to LiveEvent format for the frontend
+          const sofascoreLiveEvents = convertSofascoreToLiveEvents(data.sofascore);
+          if (sofascoreLiveEvents.length > 0) {
+            store.dispatch(updateLiveEvents(sofascoreLiveEvents));
+          }
+        }
+
         // Clear loading state
         store.dispatch(setError(null));
         store.dispatch(setLoading(false));
-        
+
         return; // Exit early for immediate data
       }
 
       // 🆕 Handle batched updates from the new 5-second batching system
       if (data.messageType === 'batchedUpdate' && data.updates && Array.isArray(data.updates)) {
-        
+
         // Process each update in the batch
         data.updates.forEach((update, index) => {
           const { subscriptionKey, data: updateData } = update;
-          
+
           // Handle different types of batched updates
           switch (updateData.type) {
             case 'mainData':
@@ -411,39 +490,58 @@ const createWebSocketConnection = () => {
                 if (updateData.data.sports && Array.isArray(updateData.data.sports)) {
                   store.dispatch(updateSports(updateData.data.sports));
                 }
-                
+
                 if (updateData.data.liveEvents && Array.isArray(updateData.data.liveEvents)) {
                   store.dispatch(updateLiveEvents(updateData.data.liveEvents));
                 }
-                
+
                 if (updateData.data.codere?.leftMenu) {
                   store.dispatch(updateCodereData(updateData.data.codere.leftMenu));
                 }
+
+                // 🆕 Handle SofaScore data in batched updates
+                if (updateData.data.sofascore) {
+                  console.log('✅ [SOFASCORE BATCH] Received data:', {
+                    totalEvents: updateData.data.sofascore.totalEvents,
+                    sportsCount: Object.keys(updateData.data.sofascore.sports || {}).length,
+                    lastUpdate: updateData.data.sofascore.lastUpdate
+                  });
+                  
+                  // Convert SofaScore data to LiveEvent format for the frontend
+                  const sofascoreLiveEvents = convertSofascoreToLiveEvents(updateData.data.sofascore);
+                  if (sofascoreLiveEvents.length > 0) {
+                    // Merge with existing Codere events instead of replacing
+                    const currentState = store.getState().odds;
+                    const existingCodereEvents = currentState.liveEvents.filter(event => event.api_name !== 'sofascore');
+                    const combinedEvents = [...existingCodereEvents, ...sofascoreLiveEvents];
+                    store.dispatch(updateLiveEvents(combinedEvents));
+                  }
+                }
               }
               break;
-              
+
             case 'leagues':
               if (updateData.nodeId && updateData.data) {
                 // Calculate total leagues across all countries
                 let totalLeagues = 0;
                 if (updateData.data.countries && Array.isArray(updateData.data.countries)) {
-                  totalLeagues = updateData.data.countries.reduce((total: number, country: any) => 
+                  totalLeagues = updateData.data.countries.reduce((total: number, country: any) =>
                     total + (country.Leagues ? country.Leagues.length : 0), 0);
                 }
                 // Use the specific action for updating sport leagues
-                store.dispatch(updateSportLeagues({ 
-                  sportNodeId: updateData.nodeId, 
-                  leagues: updateData.data 
+                store.dispatch(updateSportLeagues({
+                  sportNodeId: updateData.nodeId,
+                  leagues: updateData.data
                 }));
               }
               break;
-              
+
             case 'leagueEvents':
               if (updateData.leagueNodeId && updateData.data && Array.isArray(updateData.data)) {
                 store.dispatch(updateLeagueEvents(updateData.data));
               }
               break;
-              
+
             case 'leagueEventsWithGames':
               if (updateData.leagueNodeId && updateData.data && Array.isArray(updateData.data)) {
                 // Transform enhanced events to LiveEvent format
@@ -508,20 +606,20 @@ const createWebSocketConnection = () => {
                   marketsCount: event.ChildrenCount || 0,
                   isEnhanced: true,
                 })) as LiveEvent[];
-                
+
                 store.dispatch(updateLeagueEvents(enhancedEvents));
-                
+
                 // Store enhanced events flag
                 sessionStorage.setItem(`enhancedEvents_${updateData.leagueNodeId}`, 'true');
               }
               break;
-              
+
             case 'leagueCategories':
               if (updateData.leagueNodeId && updateData.data) {
                 store.dispatch(updateLeagueCategories(updateData.data));
               }
               break;
-              
+
             case 'matchCategories':
               if (updateData.matchId && updateData.data) {
                 // Dispatch custom event for NoLiveMatchDetailView
@@ -531,30 +629,30 @@ const createWebSocketConnection = () => {
                 document.dispatchEvent(event);
               }
               break;
-              
+
             case 'matchGames':
               if (updateData.matchId && updateData.categoryId && updateData.data) {
                 // Dispatch custom event for NoLiveMatchDetailView
                 const event = new CustomEvent('matchGames', {
-                  detail: { 
-                    matchId: updateData.matchId, 
-                    categoryId: updateData.categoryId, 
-                    data: updateData.data 
+                  detail: {
+                    matchId: updateData.matchId,
+                    categoryId: updateData.categoryId,
+                    data: updateData.data
                   }
                 });
                 document.dispatchEvent(event);
               }
               break;
-              
+
             default:
               console.warn(`📦 Unknown batched update type: ${updateData.type}`);
           }
         });
-        
+
         // Clear any connection errors when receiving batched data successfully
         store.dispatch(setError(null));
         store.dispatch(setLoading(false));
-        
+
         return; // Exit early for batched updates
       }
 
@@ -576,7 +674,7 @@ const createWebSocketConnection = () => {
         console.log("Updating live events:", data.liveEvents.length);
         store.dispatch(updateLiveEvents(data.liveEvents));
       }
-      
+
       // Handle immediate league events response from subscription
       if (data.type === 'leagueEvents' && data.data && Array.isArray(data.data)) {
         // Check if enhanced events have already been received for this league
@@ -585,17 +683,17 @@ const createWebSocketConnection = () => {
           console.log("🎯 Skipping regular league events - enhanced events already received for league", data.leagueNodeId);
           return; // Don't process regular events if enhanced events are already available
         }
-        
+
         console.log("⚡ Received immediate league events response:", data.data.length, "events for league", data.leagueNodeId);
         store.dispatch(updateLeagueEvents(data.data));
       }
-      
+
       // Handle immediate league categories response from subscription
       if (data.type === 'leagueCategories' && data.data && Array.isArray(data.data)) {
         console.log("⚡ Received immediate league categories response:", data.data.length, "categories for league", data.leagueNodeId);
         store.dispatch(updateLeagueCategories(data.data));
       }
-      
+
       // Handle enhanced league events with games response (immediate)
       if (data.type === 'leagueEventsWithGames' && data.data && Array.isArray(data.data)) {
         console.log("⚡ Received immediate enhanced league events with games:", data.data.length, "events for league", data.leagueNodeId);
@@ -664,12 +762,12 @@ const createWebSocketConnection = () => {
         })) as LiveEvent[];
         console.log("⚡ Transformed immediate enhanced events:", enhancedEvents.length, "events with enhanced markets");
         store.dispatch(updateLeagueEvents(enhancedEvents));
-        
+
         // Store enhanced events flag to prevent regular events from overwriting
         sessionStorage.setItem(`enhancedEvents_${data.leagueNodeId}`, 'true');
         return;
       }
-      
+
       // Handle match categories response (immediate)
       if (data.type === 'matchCategories' && data.matchId && data.data) {
         console.log("⚡ Received immediate match categories response:", data.data.length, "categories for match", data.matchId);
@@ -679,7 +777,7 @@ const createWebSocketConnection = () => {
         });
         document.dispatchEvent(event);
       }
-      
+
       // Handle match games response (immediate)
       if (data.type === 'matchGames' && data.matchId && data.categoryId && data.data) {
         console.log("⚡ Received immediate match games response:", data.data.length, "games for match", data.matchId, "category", data.categoryId);
@@ -689,7 +787,7 @@ const createWebSocketConnection = () => {
         });
         document.dispatchEvent(event);
       }
-      
+
       // Handle match category data response (immediate) - sent when a match is watched
       if (data.type === 'matchCategoryData' && data.matchId && (data as any).categories) {
         console.log("⚡ Received match category data for watched match:", data.matchId, "categories:", (data as any).categories.length, "markets:", (data as any).markets?.length || 0);
@@ -697,32 +795,32 @@ const createWebSocketConnection = () => {
         console.log("⚡ Markets data details:", (data as any).markets);
         // Dispatch custom event for MatchDetailView to listen
         const event = new CustomEvent('matchCategoryData', {
-          detail: { 
-            matchId: data.matchId, 
-            categories: (data as any).categories, 
+          detail: {
+            matchId: data.matchId,
+            categories: (data as any).categories,
             markets: (data as any).markets || [],
-            timestamp: (data as any).timestamp 
+            timestamp: (data as any).timestamp
           }
         });
         console.log("⚡ Dispatching matchCategoryData event:", event.detail);
         document.dispatchEvent(event);
       }
-      
+
       // Handle category-specific market data response
       if (data.type === 'categoryMarkets' && data.matchId && data.categoryId && (data as any).markets) {
         console.log("⚡ Received category markets for match:", data.matchId, "category:", data.categoryId, "markets:", (data as any).markets.length);
         // Dispatch custom event for MatchDetailView to listen
         const event = new CustomEvent('categoryMarkets', {
-          detail: { 
-            matchId: data.matchId, 
-            categoryId: data.categoryId, 
+          detail: {
+            matchId: data.matchId,
+            categoryId: data.categoryId,
             markets: (data as any).markets,
-            timestamp: (data as any).timestamp 
+            timestamp: (data as any).timestamp
           }
         });
         document.dispatchEvent(event);
       }
-      
+
       if (data.codere?.leftMenu) {
         console.log("Updating Codere data");
         store.dispatch(updateCodereData(data.codere.leftMenu));
@@ -746,7 +844,7 @@ const createWebSocketConnection = () => {
   socket.onclose = (event: CloseEvent) => {
     console.log(`🔌 WebSocket desconectado (código: ${event.code}, razón: "${event.reason}")`);
     isConnecting = false;
-    
+
     // Only show error if it wasn't an intentional close
     if (!intentionallyClosing) {
       // Check if it was a normal closure or an error
@@ -754,7 +852,7 @@ const createWebSocketConnection = () => {
         console.warn(`⚠️ WebSocket cerrado inesperadamente. Código: ${event.code}`);
         store.dispatch(setError("Conexión perdida con el servidor."));
       }
-      
+
       // Attempt to reconnect after a delay if it wasn't intentional
       setTimeout(() => {
         if (!intentionallyClosing) {
@@ -769,18 +867,18 @@ const createWebSocketConnection = () => {
     console.error("❌ Error de WebSocket:", error);
     const wsUrl = typeof window !== 'undefined' ? `ws://${window.location.hostname}:8081` : 'unknown';
     console.error(`❌ WebSocket connection failed to: ${wsUrl}`);
-    
+
     // Store error details for debugging
     if (typeof window !== 'undefined') {
-      (window as any).wsDebug = { 
-        connected: false, 
-        error: error, 
-        url: wsUrl, 
+      (window as any).wsDebug = {
+        connected: false,
+        error: error,
+        url: wsUrl,
         timestamp: new Date().toISOString(),
         message: 'WebSocket connection failed'
       };
     }
-    
+
     isConnecting = false;
     store.dispatch(setError(`No se pudo conectar al servidor de datos en vivo (${wsUrl}).`));
     store.dispatch(setLoading(false));
@@ -799,7 +897,7 @@ export const closeSocket = () => {
 };
 export const watchMatch = (matchId: number, apiName: string) => {
   console.log('🚨 [FRONTEND CRITICAL] ⭐ WATCH MATCH CALLED:', { matchId, apiName, socketReady: socket && socket.readyState === WebSocket.OPEN });
-  
+
   if (socket && socket.readyState === WebSocket.OPEN && apiName === "codere") {
     console.log('🚨 [FRONTEND CRITICAL] ✅ Sending watchMatch message to backend');
     socket.send(JSON.stringify({ action: 'watchMatch', matchId }));
@@ -825,11 +923,11 @@ export const getLeaguesForSport = (nodeId: string) => {
 
 export const getEventsForLeague = (leagueNodeId: string) => {
   console.log('getEventsForLeague called with nodeId:', leagueNodeId);
-  
+
   // For now, we don't need to send WebSocket requests since the league events
   // are filtered from existing liveEvents in the LeagueView component
   // This function is kept for future WebSocket integration if needed
-  
+
   if (socket && socket.readyState === WebSocket.OPEN) {
     console.log('Sending getLeagueEvents request via WebSocket');
     socket.send(JSON.stringify({ action: 'getLeagueEvents', leagueNodeId }));
@@ -978,10 +1076,10 @@ export const unsubscribeFromMatchGames = (matchId: string, categoryId: string) =
 export const getCategoryMarkets = (matchId: string, categoryId: string) => {
   console.log('Requesting category markets for match:', matchId, 'category:', categoryId);
   if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify({ 
-      action: 'getCategoryMarkets', 
+    socket.send(JSON.stringify({
+      action: 'getCategoryMarkets',
       matchId: matchId,
-      categoryId: categoryId 
+      categoryId: categoryId
     }));
     return true;
   } else {
@@ -1033,7 +1131,7 @@ export const clearConnectionError = () => {
  */
 export const getConnectionStatus = () => {
   if (!socket) return 'disconnected';
-  
+
   switch (socket.readyState) {
     case WebSocket.CONNECTING: return 'connecting';
     case WebSocket.OPEN: return 'connected';
