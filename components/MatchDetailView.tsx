@@ -1,11 +1,14 @@
 ﻿import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { ArrowLeft, HelpCircle, Lock } from 'lucide-react';
+import { ArrowLeft, HelpCircle, Lock, BarChart3 } from 'lucide-react';
 import { SelectedBet } from '../lib/data/betSlipTypes';
 import { LiveEvent, getCategoryMarkets, watchMatch, unwatchMatch } from '../lib/services/sportsService';
 import { initialSportCategories } from '../lib/data/sportCategories';
 import { Skeleton } from '@/components/ui/skeleton';
 import { store } from "../store"; // Importa tu store de Redux
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 import LiveMatchHeader from './LiveMatchHeader';
+import SofascoreWidgetView from './SofascoreWidgetView';
 
 interface MatchDetailViewProps {
     matchData: LiveEvent;
@@ -266,6 +269,39 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
     const tabsContainerRef = useRef<HTMLDivElement>(null); // Ref for auto-scrolling tabs
     const [categoryLoadAttempts, setCategoryLoadAttempts] = useState<Record<string, number>>({}); // Track load attempts per category
     const { liveEvents } = store.getState().odds;
+    
+    // SofaScore widget view state
+    const [showSofascoreWidget, setShowSofascoreWidget] = useState(false);
+    const sofascoreData = useSelector((state: RootState) => state.odds.sofascore.data);
+    const sofascoreWidgetsEnabled = process.env.NEXT_PUBLIC_SOFASCORE_LIVE_WIDGETS === 'true';
+    
+    // Check if SofaScore data is available for this match
+    const hasSofascoreData = useMemo(() => {
+        console.log('🔍 Checking SofaScore data availability:', {
+            matchId: matchData.id,
+            apiName: matchData.api_name,
+            widgetsEnabled: sofascoreWidgetsEnabled,
+            hasSofascoreData: !!sofascoreData,
+            hasSports: !!sofascoreData?.sports
+        });
+        
+        if (!sofascoreData || !sofascoreData.sports || matchData.api_name !== 'sofascore') {
+            console.log('❌ No SofaScore data or not a SofaScore match');
+            return false;
+        }
+        
+        // Find the sport this event belongs to
+        for (const [sportName, sportData] of Object.entries(sofascoreData.sports)) {
+            const sportDataTyped = sportData as any;
+            const hasEvent = sportDataTyped?.liveEvents?.events?.some((e: any) => e.id === matchData.id);
+            if (hasEvent) {
+                console.log('✅ Found SofaScore data for match in sport:', sportName);
+                return true;
+            }
+        }
+        console.log('❌ Match not found in SofaScore data');
+        return false;
+    }, [sofascoreData, matchData.id, matchData.api_name, sofascoreWidgetsEnabled]);
 
     useEffect(() => {
         // Only update markets if we don't have stable category data yet
@@ -648,6 +684,27 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
         setInitialMarketsCount(marketsCount);
     }, [])
     
+    // If showing SofaScore widget view, render that instead
+    if (showSofascoreWidget && hasSofascoreData) {
+        // Find the sport name for this event
+        let sportName = '';
+        for (const [sport, sportData] of Object.entries(sofascoreData.sports)) {
+            const sportDataTyped = sportData as any;
+            if (sportDataTyped?.liveEvents?.events?.some((e: any) => e.id === matchData.id)) {
+                sportName = sport;
+                break;
+            }
+        }
+        
+        return (
+            <SofascoreWidgetView 
+                matchId={matchData.id || 0}
+                sportName={sportName}
+                onBack={() => setShowSofascoreWidget(false)}
+            />
+        );
+    }
+    
     return (
         <div className="flex flex-col h-screen bg-white dark:bg-zinc-900 text-slate-900 dark:text-slate-100">
             <header className="shrink-0 border-b border-slate-200 dark:border-zinc-800">
@@ -658,6 +715,29 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
                     className=""
                     onBack={onBack}
                 />
+                
+                {/* SofaScore Widget Button */}
+                {(() => {
+                    console.log('🔍 Button render check:', {
+                        sofascoreWidgetsEnabled,
+                        hasSofascoreData,
+                        shouldShow: sofascoreWidgetsEnabled && hasSofascoreData
+                    });
+                    return sofascoreWidgetsEnabled && hasSofascoreData ? (
+                        <div className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 border-t border-blue-100 dark:border-blue-900/30">
+                            <button
+                                onClick={() => {
+                                    console.log('✅ Opening SofaScore widget view');
+                                    setShowSofascoreWidget(true);
+                                }}
+                                className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2.5 rounded-lg font-semibold text-sm transition-all shadow-sm hover:shadow-md"
+                            >
+                                <BarChart3 size={18} />
+                                <span>View SofaScore Live Data & Stats</span>
+                            </button>
+                        </div>
+                    ) : null;
+                })()}
             </header>
 
             {/* Manual Tab Implementation */}
