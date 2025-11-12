@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, TrendingUp, TrendingDown, Clock, Users, Target, BarChart3, Shield, Activity, Trophy, History, TrendingUpIcon } from 'lucide-react';
+import { ArrowLeft, TrendingUp, TrendingDown, Clock, Users, Target, BarChart3, Shield, Activity, Trophy, History, TrendingUpIcon, Clipboard } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import SofascoreStatistics from './sofascore/SofascoreStatistics';
@@ -8,6 +8,8 @@ import SofascoreMomentum from './sofascore/SofascoreMomentum';
 import SofascoreStandings from './sofascore/SofascoreStandings';
 import SofascoreH2H from './sofascore/SofascoreH2H';
 import SofascorePrematchStandings from './sofascore/SofascorePrematchStandings';
+import SofascoreBoxScore from './sofascore/SofascoreBoxScore';
+import SofascoreForm from './sofascore/SofascoreForm';
 
 interface SofascoreWidgetViewProps {
     matchId: number;
@@ -15,7 +17,7 @@ interface SofascoreWidgetViewProps {
     onBack: () => void;
 }
 
-type TabType = 'overview' | 'statistics' | 'lineups' | 'momentum' | 'standings' | 'form' | 'h2h';
+type TabType = 'overview' | 'boxscore' | 'statistics' | 'lineups' | 'momentum' | 'standings' | 'form' | 'h2h';
 
 interface TabItem {
     id: TabType;
@@ -31,15 +33,68 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     const sofascoreData = useSelector((state: RootState) => state.odds.sofascore.data);
     const [activeTab, setActiveTab] = useState<TabType>('overview');
     
-    // Get event data
+    // Get event data - try both lowercase and capitalized sport names
     const eventId = matchId.toString();
-    const sportData = sofascoreData?.sports?.[sportName];
-    const liveEvent = sportData?.liveEvents?.events?.find((e: any) => e.id === matchId);
+    const sportNameLower = sportName.toLowerCase();
+    const sportData = sofascoreData?.sports?.[sportNameLower] || sofascoreData?.sports?.[sportName];
+    
+    // Debug logging
+    console.log('🔍 SofascoreWidgetView Debug:', {
+        matchId,
+        eventId,
+        sportName,
+        sportNameLower,
+        availableSports: sofascoreData?.sports ? Object.keys(sofascoreData.sports) : [],
+        sportData: sportData ? 'found' : 'not found',
+        events: sportData?.events ? Object.keys(sportData.events) : []
+    });
+    
+    const liveEvent = sportData?.liveEvents?.events?.find((e: any) => e.id === matchId) 
+        || sportData?.liveEvents?.find((e: any) => e.id === matchId);
     const detailedData = sportData?.events?.[eventId];
+    
+    // Additional debug for detailedData
+    if (detailedData) {
+        console.log('📊 Available endpoints:', Object.keys(detailedData));
+    } else {
+        console.log('❌ No detailedData found for eventId:', eventId);
+    }
+    
+    if (!sportData || !detailedData) {
+        console.log('❌ Missing data:', { 
+            sportData: !!sportData, 
+            detailedData: !!detailedData, 
+            liveEvent: !!liveEvent,
+            allData: sofascoreData 
+        });
+        return (
+            <div className="flex flex-col h-full bg-white dark:bg-zinc-900 text-slate-900 dark:text-slate-100">
+                <header className="p-4 border-b dark:border-zinc-800 flex items-center">
+                    <button onClick={onBack} className="mr-3 hover:bg-slate-100 dark:hover:bg-zinc-800 p-2 rounded">
+                        <ArrowLeft size={24} />
+                    </button>
+                    <h2 className="text-lg font-semibold">SofaScore Match Data</h2>
+                </header>
+                <div className="flex-1 flex flex-col items-center justify-center p-4">
+                    <p className="text-slate-500 mb-4">No SofaScore data available for this match</p>
+                    <div className="text-xs text-slate-400 space-y-1 bg-slate-100 dark:bg-zinc-800 p-4 rounded">
+                        <p><strong>Match ID:</strong> {matchId}</p>
+                        <p><strong>Event ID:</strong> {eventId}</p>
+                        <p><strong>Sport:</strong> {sportName} / {sportNameLower}</p>
+                        <p><strong>Available sports:</strong> {sofascoreData?.sports ? Object.keys(sofascoreData.sports).join(', ') : 'none'}</p>
+                        <p><strong>Sport data found:</strong> {sportData ? 'yes' : 'no'}</p>
+                        <p><strong>Events in sport:</strong> {sportData?.events ? Object.keys(sportData.events).join(', ') : 'none'}</p>
+                        <p><strong>Detailed data found:</strong> {detailedData ? 'yes' : 'no'}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // Define available tabs
     const tabs: TabItem[] = [
         { id: 'overview', label: 'Overview', icon: <Target size={16} /> },
+        { id: 'boxscore', label: 'Box Score', icon: <Clipboard size={16} /> },
         { id: 'statistics', label: 'Statistics', icon: <BarChart3 size={16} /> },
         { id: 'lineups', label: 'Lineups', icon: <Shield size={16} /> },
         { id: 'momentum', label: 'Momentum', icon: <Activity size={16} /> },
@@ -47,6 +102,32 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
         { id: 'form', label: 'Form', icon: <TrendingUpIcon size={16} /> },
         { id: 'h2h', label: 'H2H', icon: <History size={16} /> },
     ];
+    
+    // Log available endpoints for debugging
+    console.log('📋 Extracting data for event:', eventId);
+    console.log('🔑 detailedData keys:', detailedData ? Object.keys(detailedData) : []);
+    
+    // Try different possible key formats
+    const possibleStatKeys = [
+        `event/${eventId}/statistics`,
+        `event_${eventId}_statistics`,
+        'statistics'
+    ];
+    
+    let foundStatisticsData = null;
+    for (const key of possibleStatKeys) {
+        if (detailedData?.[key]) {
+            console.log(`✅ Found statistics at key: "${key}"`);
+            foundStatisticsData = detailedData[key];
+            break;
+        }
+    }
+    
+    console.log('Statistics data check:', {
+        statisticsKey: `event/${eventId}/statistics`,
+        found: !!foundStatisticsData,
+        data: foundStatisticsData
+    });
 
     // Extract all endpoint data
     const eventDetails = detailedData?.[`event/${eventId}`]?.event || liveEvent;
@@ -60,23 +141,8 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     const graphData = detailedData?.[`event/${eventId}/graph`];
     const standingsData = detailedData?.[`tournament/${eventDetails?.tournament?.uniqueTournament?.id}/season/${eventDetails?.season?.id}/standings/total`];
     const pregameFormData = detailedData?.[`event/${eventId}/pregame-form`];
-
-    if (!liveEvent || !detailedData) {
-        return (
-            <div className="flex flex-col h-full bg-white dark:bg-zinc-900">
-                <header className="p-4 border-b dark:border-zinc-800 flex items-center">
-                    <button onClick={onBack} className="mr-3">
-                        <ArrowLeft size={24} />
-                    </button>
-                    <h2 className="text-lg font-semibold">SofaScore Match Data</h2>
-                </header>
-                <div className="flex-1 flex items-center justify-center">
-                    <p className="text-slate-500">No SofaScore data available</p>
-                </div>
-            </div>
-        );
-    }
-
+    const boxScoreData = detailedData?.[`event/${eventId}/boxscore`] || detailedData?.[`event/${eventId}/box-score`];
+    
     const homeTeam = eventDetails?.homeTeam?.name || liveEvent?.homeTeam?.name;
     const awayTeam = eventDetails?.awayTeam?.name || liveEvent?.awayTeam?.name;
     const homeScore = liveEvent?.homeScore?.display || liveEvent?.homeScore?.current || 0;
@@ -277,6 +343,27 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
                     </div>
                 )}
 
+                {activeTab === 'boxscore' && (
+                    <div className="p-4">
+                        {boxScoreData ? (
+                            <SofascoreBoxScore
+                                boxScoreData={boxScoreData}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
+                        ) : (
+                            <div className="text-center py-8 text-slate-500">
+                                No box score data available
+                                <p className="text-xs mt-2 text-slate-400">
+                                    (Box score is typically available for basketball, baseball, and similar sports)
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 {activeTab === 'statistics' && (
                     <div className="p-4">
                         {statisticsData?.statistics ? (
@@ -349,17 +436,27 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
 
                 {activeTab === 'form' && (
                     <div className="p-4">
-                        {standingsData && pregameFormData ? (
-                            <SofascorePrematchStandings
-                                standingsData={standingsData}
-                                pregameFormData={pregameFormData}
-                                homeTeamId={eventDetails?.homeTeam?.id}
-                                awayTeamId={eventDetails?.awayTeam?.id}
-                                homeTeamName={homeTeam}
-                                awayTeamName={awayTeam}
-                                homeTeamColor={homeTeamColor}
-                                awayTeamColor={awayTeamColor}
-                            />
+                        {pregameFormData ? (
+                            standingsData ? (
+                                <SofascorePrematchStandings
+                                    standingsData={standingsData}
+                                    pregameFormData={pregameFormData}
+                                    homeTeamId={eventDetails?.homeTeam?.id}
+                                    awayTeamId={eventDetails?.awayTeam?.id}
+                                    homeTeamName={homeTeam}
+                                    awayTeamName={awayTeam}
+                                    homeTeamColor={homeTeamColor}
+                                    awayTeamColor={awayTeamColor}
+                                />
+                            ) : (
+                                <SofascoreForm
+                                    pregameFormData={pregameFormData}
+                                    homeTeamName={homeTeam}
+                                    awayTeamName={awayTeam}
+                                    homeTeamColor={homeTeamColor}
+                                    awayTeamColor={awayTeamColor}
+                                />
+                            )
                         ) : (
                             <div className="text-center py-8 text-slate-500">
                                 No form data available
