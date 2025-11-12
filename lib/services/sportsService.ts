@@ -479,36 +479,37 @@ const createWebSocketConnection = () => {
       if (data.messageType === 'batchedUpdate' && data.updates && Array.isArray(data.updates)) {
 
         // Process each update in the batch
-        data.updates.forEach((update, index) => {
-          const { subscriptionKey, data: updateData } = update;
-
+        data.updates.forEach((update: any, index) => {
+          // The update object has properties at root level: type, nodeId, leagueNodeId, matchId, categoryId, data
+          const updateType = update.type;
+          
           // Handle different types of batched updates
-          switch (updateData.type) {
+          switch (updateType) {
             case 'mainData':
-              if (updateData.data) {
+              if (update.data) {
                 // Handle main data (sports, liveEvents, codere)
-                if (updateData.data.sports && Array.isArray(updateData.data.sports)) {
-                  store.dispatch(updateSports(updateData.data.sports));
+                if (update.data.sports && Array.isArray(update.data.sports)) {
+                  store.dispatch(updateSports(update.data.sports));
                 }
 
-                if (updateData.data.liveEvents && Array.isArray(updateData.data.liveEvents)) {
-                  store.dispatch(updateLiveEvents(updateData.data.liveEvents));
+                if (update.data.liveEvents && Array.isArray(update.data.liveEvents)) {
+                  store.dispatch(updateLiveEvents(update.data.liveEvents));
                 }
 
-                if (updateData.data.codere?.leftMenu) {
-                  store.dispatch(updateCodereData(updateData.data.codere.leftMenu));
+                if (update.data.codere?.leftMenu) {
+                  store.dispatch(updateCodereData(update.data.codere.leftMenu));
                 }
 
                 // 🆕 Handle SofaScore data in batched updates
-                if (updateData.data.sofascore) {
+                if (update.data.sofascore) {
                   console.log('✅ [SOFASCORE BATCH] Received data:', {
-                    totalEvents: updateData.data.sofascore.totalEvents,
-                    sportsCount: Object.keys(updateData.data.sofascore.sports || {}).length,
-                    lastUpdate: updateData.data.sofascore.lastUpdate
+                    totalEvents: update.data.sofascore.totalEvents,
+                    sportsCount: Object.keys(update.data.sofascore.sports || {}).length,
+                    lastUpdate: update.data.sofascore.lastUpdate
                   });
                   
                   // Convert SofaScore data to LiveEvent format for the frontend
-                  const sofascoreLiveEvents = convertSofascoreToLiveEvents(updateData.data.sofascore);
+                  const sofascoreLiveEvents = convertSofascoreToLiveEvents(update.data.sofascore);
                   if (sofascoreLiveEvents.length > 0) {
                     // Merge with existing Codere events instead of replacing
                     const currentState = store.getState().odds;
@@ -521,31 +522,32 @@ const createWebSocketConnection = () => {
               break;
 
             case 'leagues':
-              if (updateData.nodeId && updateData.data) {
+              if (update.nodeId && update.data) {
                 // Calculate total leagues across all countries
                 let totalLeagues = 0;
-                if (updateData.data.countries && Array.isArray(updateData.data.countries)) {
-                  totalLeagues = updateData.data.countries.reduce((total: number, country: any) =>
+                if (update.data.countries && Array.isArray(update.data.countries)) {
+                  totalLeagues = update.data.countries.reduce((total: number, country: any) =>
                     total + (country.Leagues ? country.Leagues.length : 0), 0);
                 }
+                console.log(`✅ Received ${totalLeagues} leagues for sport ${update.nodeId} from ${update.data.countries.length} countries`);
                 // Use the specific action for updating sport leagues
                 store.dispatch(updateSportLeagues({
-                  sportNodeId: updateData.nodeId,
-                  leagues: updateData.data
+                  sportNodeId: update.nodeId,
+                  leagues: update.data
                 }));
               }
               break;
 
             case 'leagueEvents':
-              if (updateData.leagueNodeId && updateData.data && Array.isArray(updateData.data)) {
-                store.dispatch(updateLeagueEvents(updateData.data));
+              if (update.leagueNodeId && update.data && Array.isArray(update.data)) {
+                store.dispatch(updateLeagueEvents(update.data));
               }
               break;
 
             case 'leagueEventsWithGames':
-              if (updateData.leagueNodeId && updateData.data && Array.isArray(updateData.data)) {
+              if (update.leagueNodeId && update.data && Array.isArray(update.data)) {
                 // Transform enhanced events to LiveEvent format
-                const enhancedEvents = updateData.data.map((event: any) => ({
+                const enhancedEvents = update.data.map((event: any) => ({
                   api_name: 'codere',
                   id: parseInt(event.NodeId, 10),
                   sport_group: event.SportName,
@@ -610,34 +612,34 @@ const createWebSocketConnection = () => {
                 store.dispatch(updateLeagueEvents(enhancedEvents));
 
                 // Store enhanced events flag
-                sessionStorage.setItem(`enhancedEvents_${updateData.leagueNodeId}`, 'true');
+                sessionStorage.setItem(`enhancedEvents_${update.leagueNodeId}`, 'true');
               }
               break;
 
             case 'leagueCategories':
-              if (updateData.leagueNodeId && updateData.data) {
-                store.dispatch(updateLeagueCategories(updateData.data));
+              if (update.leagueNodeId && update.data) {
+                store.dispatch(updateLeagueCategories(update.data));
               }
               break;
 
             case 'matchCategories':
-              if (updateData.matchId && updateData.data) {
+              if (update.matchId && update.data) {
                 // Dispatch custom event for NoLiveMatchDetailView
                 const event = new CustomEvent('matchCategories', {
-                  detail: { matchId: updateData.matchId, data: updateData.data }
+                  detail: { matchId: update.matchId, data: update.data }
                 });
                 document.dispatchEvent(event);
               }
               break;
 
             case 'matchGames':
-              if (updateData.matchId && updateData.categoryId && updateData.data) {
+              if (update.matchId && update.categoryId && update.data) {
                 // Dispatch custom event for NoLiveMatchDetailView
                 const event = new CustomEvent('matchGames', {
                   detail: {
-                    matchId: updateData.matchId,
-                    categoryId: updateData.categoryId,
-                    data: updateData.data
+                    matchId: update.matchId,
+                    categoryId: update.categoryId,
+                    data: update.data
                   }
                 });
                 document.dispatchEvent(event);
@@ -645,7 +647,7 @@ const createWebSocketConnection = () => {
               break;
 
             default:
-              console.warn(`📦 Unknown batched update type: ${updateData.type}`);
+              console.warn(`📦 Unknown batched update type: ${updateType}`);
           }
         });
 
