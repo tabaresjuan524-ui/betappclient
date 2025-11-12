@@ -17,6 +17,15 @@ export interface OddsState {
   codere: {
     leftMenu: CodereLeftMenuData
   };
+  sofascore: {
+    data: any | null;
+    lastUpdate: string | null;
+    totalEvents: number;
+    sports: Record<string, any>;
+    tournaments: Record<string, any>;
+    teams: Record<string, any>;
+    events: Record<string, any>;
+  };
   selectedLeague: {
     name: string | null;
     nodeId: string | null;
@@ -33,6 +42,15 @@ const initialState: OddsState = {
   loading: true,
   error: null,
   codere: { leftMenu: { sports: [], highlights: [], highlightsConfig: [] } },
+  sofascore: {
+    data: null,
+    lastUpdate: null,
+    totalEvents: 0,
+    sports: {},
+    tournaments: {},
+    teams: {},
+    events: {}
+  },
   selectedLeague: {
     name: null,
     nodeId: null,
@@ -65,6 +83,54 @@ const oddsSlice = createSlice({
     },
     updateCodereData(state, action: PayloadAction<CodereLeftMenuData>) {
       state.codere.leftMenu = action.payload;
+    },
+    updateSofascoreData(state, action: PayloadAction<any>) {
+      // Store the complete SofaScore data structure
+      state.sofascore.data = action.payload;
+      state.sofascore.lastUpdate = action.payload.lastUpdate || new Date().toISOString();
+      state.sofascore.totalEvents = action.payload.totalEvents || 0;
+      state.sofascore.sports = action.payload.sports || {};
+      
+      // Extract tournaments, teams, and events from nested sport data
+      const tournaments: Record<string, any> = {};
+      const teams: Record<string, any> = {};
+      const events: Record<string, any> = {};
+      
+      if (action.payload.sports) {
+        Object.entries(action.payload.sports).forEach(([sportName, sportData]: [string, any]) => {
+          // Collect events from each sport
+          if (sportData.events && typeof sportData.events === 'object') {
+            Object.entries(sportData.events).forEach(([eventId, eventData]: [string, any]) => {
+              events[eventId] = { ...eventData, sport: sportName };
+            });
+          }
+          
+          // Extract tournaments if they exist
+          if (sportData.tournaments && typeof sportData.tournaments === 'object') {
+            Object.assign(tournaments, sportData.tournaments);
+          }
+          
+          // Extract teams if they exist
+          if (sportData.teams && typeof sportData.teams === 'object') {
+            Object.assign(teams, sportData.teams);
+          }
+        });
+      }
+      
+      state.sofascore.tournaments = tournaments;
+      state.sofascore.teams = teams;
+      state.sofascore.events = events;
+    },
+    clearSofascoreData(state) {
+      state.sofascore = {
+        data: null,
+        lastUpdate: null,
+        totalEvents: 0,
+        sports: {},
+        tournaments: {},
+        teams: {},
+        events: {}
+      };
     },
     updateSportLeagues(state, action: PayloadAction<{ sportNodeId: string; leagues: any }>) {
       if (state.codere.leftMenu?.sports) {
@@ -103,6 +169,8 @@ export const {
   updateSports,
   updateLiveEvents,
   updateCodereData,
+  updateSofascoreData,
+  clearSofascoreData,
   updateSportLeagues,
   setSelectedLeague,
   updateLeagueEvents,

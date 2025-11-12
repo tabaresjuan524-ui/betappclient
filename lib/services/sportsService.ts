@@ -6,6 +6,8 @@ import {
   setLoading,
   setError,
   updateCodereData,
+  updateSofascoreData,
+  clearSofascoreData,
   updateSportLeagues,
   updateLeagueEvents,
   updateLeagueCategories
@@ -453,17 +455,27 @@ const createWebSocketConnection = () => {
           store.dispatch(updateCodereData(data.codere.leftMenu));
         }
 
-        // 🆕 Process SofaScore data (for future widget implementation)
+        // 🆕 Process SofaScore data and store it in Redux
         if (data.sofascore) {
-          console.log('✅ [SOFASCORE] Received data (not displayed yet - for widgets only):', {
+          // Calculate total events across all sports
+          let totalEventsCount = 0;
+          if (data.sofascore.sports) {
+            Object.values(data.sofascore.sports).forEach((sport: any) => {
+              if (sport.events) {
+                totalEventsCount += Object.keys(sport.events).length;
+              }
+            });
+          }
+          
+          console.log('✅ [SOFASCORE] Received data and storing in Redux:', {
             totalEvents: data.sofascore.totalEvents,
             sportsCount: Object.keys(data.sofascore.sports || {}).length,
+            eventsCount: totalEventsCount,
             lastUpdate: data.sofascore.lastUpdate
           });
           
-          // TODO: Store SofaScore data separately for widget implementation
-          // For now, DO NOT dispatch to liveEvents as it's not ready for display
-          // SofaScore will be used for live stats widgets in the future
+          // Store SofaScore data in Redux for widgets and future use
+          store.dispatch(updateSofascoreData(data.sofascore));
         }
 
         // Clear loading state
@@ -476,7 +488,43 @@ const createWebSocketConnection = () => {
       // 🆕 Handle batched updates from the new 5-second batching system
       if (data.messageType === 'batchedUpdate' && data.updates && Array.isArray(data.updates)) {
 
-        // Process each update in the batch
+        // First, handle root-level data (sports, liveEvents, codere, sofascore)
+        if (data.sports && Array.isArray(data.sports)) {
+          store.dispatch(updateSports(data.sports));
+        }
+
+        if (data.liveEvents && Array.isArray(data.liveEvents)) {
+          store.dispatch(updateLiveEvents(data.liveEvents));
+        }
+
+        if (data.codere?.leftMenu) {
+          store.dispatch(updateCodereData(data.codere.leftMenu));
+        }
+
+        // 🆕 Handle SofaScore data at root level of batched update
+        if (data.sofascore) {
+          // Calculate total events across all sports
+          let totalEventsCount = 0;
+          if (data.sofascore.sports) {
+            Object.values(data.sofascore.sports).forEach((sport: any) => {
+              if (sport.events) {
+                totalEventsCount += Object.keys(sport.events).length;
+              }
+            });
+          }
+          
+          console.log('✅ [SOFASCORE BATCHED] Received data and storing in Redux:', {
+            totalEvents: data.sofascore.totalEvents,
+            sportsCount: Object.keys(data.sofascore.sports || {}).length,
+            eventsCount: totalEventsCount,
+            lastUpdate: data.sofascore.lastUpdate
+          });
+          
+          // Store SofaScore data in Redux for widgets and future use
+          store.dispatch(updateSofascoreData(data.sofascore));
+        }
+
+        // Then, process each subscription-specific update in the batch
         data.updates.forEach((update: any, index) => {
           // The update object has properties at root level: type, nodeId, leagueNodeId, matchId, categoryId, data
           const updateType = update.type;
@@ -498,17 +546,27 @@ const createWebSocketConnection = () => {
                   store.dispatch(updateCodereData(update.data.codere.leftMenu));
                 }
 
-                // 🆕 Handle SofaScore data in batched updates (for future widget implementation)
+                // 🆕 Handle SofaScore data in batched updates and store in Redux
                 if (update.data.sofascore) {
-                  console.log('✅ [SOFASCORE BATCH] Received data (not displayed yet - for widgets only):', {
+                  // Calculate total events across all sports
+                  let totalEventsCount = 0;
+                  if (update.data.sofascore.sports) {
+                    Object.values(update.data.sofascore.sports).forEach((sport: any) => {
+                      if (sport.events) {
+                        totalEventsCount += Object.keys(sport.events).length;
+                      }
+                    });
+                  }
+                  
+                  console.log('✅ [SOFASCORE BATCH] Received data and storing in Redux:', {
                     totalEvents: update.data.sofascore.totalEvents,
                     sportsCount: Object.keys(update.data.sofascore.sports || {}).length,
+                    eventsCount: totalEventsCount,
                     lastUpdate: update.data.sofascore.lastUpdate
                   });
                   
-                  // TODO: Store SofaScore data separately for widget implementation
-                  // For now, DO NOT dispatch to liveEvents as it's not ready for display
-                  // SofaScore will be used for live stats widgets in the future
+                  // Store SofaScore data in Redux for widgets and future use
+                  store.dispatch(updateSofascoreData(update.data.sofascore));
                 }
               }
               break;
