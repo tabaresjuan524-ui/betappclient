@@ -279,6 +279,12 @@ const MatchItem = React.memo<MatchItemProps>(({ matchData, selectedBets, favorit
                             ) : (
                                 <span className="text-xs text-slate-500 dark:text-slate-400">{formattedTime}</span>
                             )}
+                            {/* SofaScore badge indicator */}
+                            {matchData.api_name === 'sofascore' && (
+                                <span className="text-xs px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded font-semibold">
+                                    SofaScore
+                                </span>
+                            )}
                         </div>
                         <div className="flex flex-col space-y-1">
                             {/* Team names and main scores row */}
