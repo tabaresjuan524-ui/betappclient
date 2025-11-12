@@ -1,5 +1,39 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with pre-installed Shadcn components.
 
+## 🎉 SofaScore Widget Integration
+
+This project includes a comprehensive SofaScore widget integration with live match data, statistics, lineups, standings, and more.
+
+### 📚 Documentation
+
+- **[Quick Start Guide](./SOFASCORE_QUICK_START.md)** - Get started in 5 minutes
+- **[Widget Overview](./SOFASCORE_WIDGETS_COMPLETE.md)** - Complete feature list and data availability
+- **[Integration Summary](./SOFASCORE_INTEGRATION_SUMMARY.md)** - Technical implementation details
+- **[Testing Guide](./SOFASCORE_INTEGRATION_TESTING.md)** - Step-by-step testing procedures
+- **[Visual Reference](./SOFASCORE_WIDGETS_VISUAL_REFERENCE.md)** - What each widget looks like
+
+### ✨ Features
+
+- 📊 **Statistics Widget** - Match stats with comparison bars (possession, shots, passes, etc.)
+- ⚽ **Lineups Widget** - Team formations, player ratings, and statistics
+- 📈 **Momentum Widget** - Interactive graph showing match flow minute-by-minute
+- 🏆 **Standings Widget** - Full league table with highlighted teams
+- 📊 **Form Widget** - Team comparison with last 5 matches
+- 🔄 **H2H Widget** - Head-to-head history and statistics
+- 🎯 **Overview** - Odds, incidents, and predictions
+
+### 🚀 Quick Start
+
+1. **Configure environment** (see `.env.local` example below)
+2. **Start backend server** (`cd luckiaServer && npm run dev`)
+3. **Start frontend** (`npm run dev`)
+4. **Open browser** to http://localhost:3000
+5. **Click on a match** with "SofaScore" badge
+
+For detailed setup instructions, see [SOFASCORE_QUICK_START.md](./SOFASCORE_QUICK_START.md)
+
+---
+
 ## Getting Started
 
 First, run the development server:

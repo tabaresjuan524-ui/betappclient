@@ -1,12 +1,26 @@
-import React from 'react';
-import { ArrowLeft, TrendingUp, TrendingDown, Clock, Users, Target } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, TrendingUp, TrendingDown, Clock, Users, Target, BarChart3, Shield, Activity, Trophy, History, TrendingUpIcon } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import SofascoreStatistics from './sofascore/SofascoreStatistics';
+import SofascoreLineups from './sofascore/SofascoreLineups';
+import SofascoreMomentum from './sofascore/SofascoreMomentum';
+import SofascoreStandings from './sofascore/SofascoreStandings';
+import SofascoreH2H from './sofascore/SofascoreH2H';
+import SofascorePrematchStandings from './sofascore/SofascorePrematchStandings';
 
 interface SofascoreWidgetViewProps {
     matchId: number;
     sportName: string;
     onBack: () => void;
+}
+
+type TabType = 'overview' | 'statistics' | 'lineups' | 'momentum' | 'standings' | 'form' | 'h2h';
+
+interface TabItem {
+    id: TabType;
+    label: string;
+    icon: React.ReactNode;
 }
 
 /**
@@ -15,12 +29,37 @@ interface SofascoreWidgetViewProps {
  */
 const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, sportName, onBack }) => {
     const sofascoreData = useSelector((state: RootState) => state.odds.sofascore.data);
+    const [activeTab, setActiveTab] = useState<TabType>('overview');
     
     // Get event data
     const eventId = matchId.toString();
     const sportData = sofascoreData?.sports?.[sportName];
     const liveEvent = sportData?.liveEvents?.events?.find((e: any) => e.id === matchId);
     const detailedData = sportData?.events?.[eventId];
+
+    // Define available tabs
+    const tabs: TabItem[] = [
+        { id: 'overview', label: 'Overview', icon: <Target size={16} /> },
+        { id: 'statistics', label: 'Statistics', icon: <BarChart3 size={16} /> },
+        { id: 'lineups', label: 'Lineups', icon: <Shield size={16} /> },
+        { id: 'momentum', label: 'Momentum', icon: <Activity size={16} /> },
+        { id: 'standings', label: 'Standings', icon: <Trophy size={16} /> },
+        { id: 'form', label: 'Form', icon: <TrendingUpIcon size={16} /> },
+        { id: 'h2h', label: 'H2H', icon: <History size={16} /> },
+    ];
+
+    // Extract all endpoint data
+    const eventDetails = detailedData?.[`event/${eventId}`]?.event || liveEvent;
+    const oddsData = detailedData?.[`event/${eventId}/odds/1/featured`];
+    const allOddsData = detailedData?.[`event/${eventId}/odds/1/all`];
+    const incidentsData = detailedData?.[`event/${eventId}/incidents`];
+    const h2hData = detailedData?.[`event/${eventId}/h2h`];
+    const statisticsData = detailedData?.[`event/${eventId}/statistics`];
+    const votesData = detailedData?.[`event/${eventId}/votes`];
+    const lineupsData = detailedData?.[`event/${eventId}/lineups`];
+    const graphData = detailedData?.[`event/${eventId}/graph`];
+    const standingsData = detailedData?.[`tournament/${eventDetails?.tournament?.uniqueTournament?.id}/season/${eventDetails?.season?.id}/standings/total`];
+    const pregameFormData = detailedData?.[`event/${eventId}/pregame-form`];
 
     if (!liveEvent || !detailedData) {
         return (
@@ -38,19 +77,15 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
         );
     }
 
-    const eventDetails = detailedData[`event/${eventId}`]?.event || liveEvent;
-    const oddsData = detailedData[`event/${eventId}/odds/1/featured`];
-    const allOddsData = detailedData[`event/${eventId}/odds/1/all`];
-    const incidentsData = detailedData[`event/${eventId}/incidents`];
-    const h2hData = detailedData[`event/${eventId}/h2h`];
-    const statisticsData = detailedData[`event/${eventId}/statistics`];
-    const votesData = detailedData[`event/${eventId}/votes`];
-
-    const homeTeam = eventDetails.homeTeam?.name || liveEvent.homeTeam?.name;
-    const awayTeam = eventDetails.awayTeam?.name || liveEvent.awayTeam?.name;
-    const homeScore = liveEvent.homeScore?.display || liveEvent.homeScore?.current || 0;
-    const awayScore = liveEvent.awayScore?.display || liveEvent.awayScore?.current || 0;
-    const status = liveEvent.status?.description || liveEvent.status?.type;
+    const homeTeam = eventDetails?.homeTeam?.name || liveEvent?.homeTeam?.name;
+    const awayTeam = eventDetails?.awayTeam?.name || liveEvent?.awayTeam?.name;
+    const homeScore = liveEvent?.homeScore?.display || liveEvent?.homeScore?.current || 0;
+    const awayScore = liveEvent?.awayScore?.display || liveEvent?.awayScore?.current || 0;
+    const status = liveEvent?.status?.description || liveEvent?.status?.type;
+    
+    // Team colors (can be customized based on team data)
+    const homeTeamColor = '#3b82f6'; // blue
+    const awayTeamColor = '#ef4444'; // red
 
     // Convert fractional to decimal
     const fractionalToDecimal = (fractional: string) => {
@@ -65,166 +100,291 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     return (
         <div className="flex flex-col h-screen bg-white dark:bg-zinc-900 text-slate-900 dark:text-slate-100">
             {/* Header */}
-            <header className="shrink-0 p-4 border-b dark:border-zinc-800 bg-gradient-to-r from-blue-600 to-blue-800">
-                <div className="flex items-center mb-3">
-                    <button onClick={onBack} className="text-white mr-3 hover:bg-white/10 p-2 rounded">
-                        <ArrowLeft size={24} />
-                    </button>
-                    <div className="flex items-center space-x-2">
-                        <span className="text-white font-semibold text-lg">SofaScore</span>
-                        <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded font-semibold">LIVE</span>
+            <header className="shrink-0 border-b dark:border-zinc-800">
+                <div className="p-4 bg-gradient-to-r from-blue-600 to-blue-800">
+                    <div className="flex items-center mb-3">
+                        <button onClick={onBack} className="text-white mr-3 hover:bg-white/10 p-2 rounded">
+                            <ArrowLeft size={24} />
+                        </button>
+                        <div className="flex items-center space-x-2">
+                            <span className="text-white font-semibold text-lg">SofaScore</span>
+                            <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded font-semibold">LIVE</span>
+                        </div>
+                    </div>
+                    
+                    {/* Score Display */}
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white">
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex-1">
+                                <p className="font-semibold text-lg">{homeTeam}</p>
+                            </div>
+                            <span className="text-3xl font-bold mx-4">{homeScore}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                                <p className="font-semibold text-lg">{awayTeam}</p>
+                            </div>
+                            <span className="text-3xl font-bold mx-4">{awayScore}</span>
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-white/20 text-sm">
+                            <span className="text-blue-200">{status}</span>
+                        </div>
                     </div>
                 </div>
-                
-                {/* Score Display */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex-1">
-                            <p className="font-semibold text-lg">{homeTeam}</p>
-                        </div>
-                        <span className="text-3xl font-bold mx-4">{homeScore}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                            <p className="font-semibold text-lg">{awayTeam}</p>
-                        </div>
-                        <span className="text-3xl font-bold mx-4">{awayScore}</span>
-                    </div>
-                    <div className="mt-3 pt-3 border-t border-white/20 text-sm">
-                        <span className="text-blue-200">{status}</span>
-                    </div>
+
+                {/* Tab Navigation */}
+                <div className="flex overflow-x-auto bg-slate-50 dark:bg-zinc-800/50 border-b dark:border-zinc-700">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+                                activeTab === tab.id
+                                    ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 bg-white dark:bg-zinc-900'
+                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-zinc-700'
+                            }`}
+                        >
+                            {tab.icon}
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
             </header>
 
-            {/* Content - FIXED: Added proper overflow */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-8">
-                {/* Featured Odds */}
-                {oddsData?.featured && (
-                    <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
-                        <h3 className="font-semibold text-lg mb-3 flex items-center">
-                            <Target className="mr-2" size={20} />
-                            Featured Odds
-                        </h3>
-                        <div className="space-y-3">
-                            {Object.entries(oddsData.featured).map(([key, market]: [string, any]) => {
-                                if (!market || typeof market !== 'object') return null;
-                                return (
-                                    <div key={key} className="border dark:border-zinc-800 rounded-lg p-3">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-sm font-medium">{market.marketName}</span>
-                                            {market.isLive && (
-                                                <span className="text-xs px-2 py-0.5 bg-red-500 text-white rounded">LIVE</span>
-                                            )}
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-2">
-                                            {market.choices?.map((choice: any, idx: number) => (
-                                                <div key={idx} className="bg-slate-100 dark:bg-zinc-800 rounded p-2 text-center">
-                                                    <p className="text-xs text-slate-600 dark:text-slate-400">{choice.name}</p>
-                                                    <p className="text-lg font-bold">
-                                                        {fractionalToDecimal(choice.fractionalValue)}
-                                                    </p>
-                                                    {choice.change !== 0 && (
-                                                        <div className="flex items-center justify-center text-xs mt-1">
-                                                            {choice.change > 0 ? (
-                                                                <TrendingUp size={12} className="text-green-500 mr-1" />
-                                                            ) : (
-                                                                <TrendingDown size={12} className="text-red-500 mr-1" />
-                                                            )}
-                                                        </div>
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto">
+                {activeTab === 'overview' && (
+                    <div className="p-4 space-y-4 pb-8">
+                        {/* Featured Odds */}
+                        {oddsData?.featured && (
+                            <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
+                                <h3 className="font-semibold text-lg mb-3 flex items-center">
+                                    <Target className="mr-2" size={20} />
+                                    Featured Odds
+                                </h3>
+                                <div className="space-y-3">
+                                    {Object.entries(oddsData.featured).map(([key, market]: [string, any]) => {
+                                        if (!market || typeof market !== 'object') return null;
+                                        return (
+                                            <div key={key} className="border dark:border-zinc-800 rounded-lg p-3">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-sm font-medium">{market.marketName}</span>
+                                                    {market.isLive && (
+                                                        <span className="text-xs px-2 py-0.5 bg-red-500 text-white rounded">LIVE</span>
                                                     )}
                                                 </div>
-                                            ))}
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    {market.choices?.map((choice: any, idx: number) => (
+                                                        <div key={idx} className="bg-slate-100 dark:bg-zinc-800 rounded p-2 text-center">
+                                                            <p className="text-xs text-slate-600 dark:text-slate-400">{choice.name}</p>
+                                                            <p className="text-lg font-bold">
+                                                                {fractionalToDecimal(choice.fractionalValue)}
+                                                            </p>
+                                                            {choice.change !== 0 && (
+                                                                <div className="flex items-center justify-center text-xs mt-1">
+                                                                    {choice.change > 0 ? (
+                                                                        <TrendingUp size={12} className="text-green-500 mr-1" />
+                                                                    ) : (
+                                                                        <TrendingDown size={12} className="text-red-500 mr-1" />
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* All Markets */}
+                        {allOddsData?.markets && allOddsData.markets.length > 0 && (
+                            <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
+                                <h3 className="font-semibold text-lg mb-3">All Markets ({allOddsData.markets.length})</h3>
+                                <div className="space-y-2 max-h-96 overflow-y-auto">
+                                    {allOddsData.markets.slice(0, 10).map((market: any, idx: number) => (
+                                        <div key={idx} className="border dark:border-zinc-800 rounded p-2">
+                                            <p className="text-sm font-medium mb-1">{market.marketName}</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {market.choices?.slice(0, 3).map((choice: any, cIdx: number) => (
+                                                    <span key={cIdx} className="text-xs bg-slate-200 dark:bg-zinc-800 px-2 py-1 rounded">
+                                                        {choice.name}: <span className="font-semibold">{fractionalToDecimal(choice.fractionalValue)}</span>
+                                                    </span>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
-                {/* All Markets */}
-                {allOddsData?.markets && allOddsData.markets.length > 0 && (
-                    <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
-                        <h3 className="font-semibold text-lg mb-3">All Markets ({allOddsData.markets.length})</h3>
-                        <div className="space-y-2 max-h-96 overflow-y-auto">
-                            {allOddsData.markets.slice(0, 10).map((market: any, idx: number) => (
-                                <div key={idx} className="border dark:border-zinc-800 rounded p-2">
-                                    <p className="text-sm font-medium mb-1">{market.marketName}</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {market.choices?.slice(0, 3).map((choice: any, cIdx: number) => (
-                                            <span key={cIdx} className="text-xs bg-slate-200 dark:bg-zinc-800 px-2 py-1 rounded">
-                                                {choice.name}: <span className="font-semibold">{fractionalToDecimal(choice.fractionalValue)}</span>
+                        {/* Incidents */}
+                        {incidentsData?.incidents && incidentsData.incidents.length > 0 && (
+                            <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
+                                <h3 className="font-semibold text-lg mb-3 flex items-center">
+                                    <Clock className="mr-2" size={20} />
+                                    Match Incidents
+                                </h3>
+                                <div className="space-y-2">
+                                    {incidentsData.incidents.slice(0, 10).map((incident: any, idx: number) => (
+                                        <div key={idx} className="flex items-center border-l-4 border-blue-500 pl-3 py-2">
+                                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 mr-3">
+                                                {incident.time}'
                                             </span>
-                                        ))}
-                                    </div>
+                                            <div className="flex-1">
+                                                <p className="text-sm">{incident.text || incident.incidentType}</p>
+                                                {incident.player && (
+                                                    <p className="text-xs text-slate-500">{incident.player.name}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        )}
+
+                        {/* Votes/Predictions */}
+                        {votesData?.vote && (
+                            <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
+                                <h3 className="font-semibold text-lg mb-3 flex items-center">
+                                    <Users className="mr-2" size={20} />
+                                    User Predictions
+                                </h3>
+                                <div className="space-y-2">
+                                    {votesData.vote.vote1 !== undefined && (
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm">{homeTeam} Win</span>
+                                            <span className="font-semibold">{votesData.vote.vote1} votes</span>
+                                        </div>
+                                    )}
+                                    {votesData.vote.voteX !== undefined && votesData.vote.voteX !== null && (
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm">Draw</span>
+                                            <span className="font-semibold">{votesData.vote.voteX} votes</span>
+                                        </div>
+                                    )}
+                                    {votesData.vote.vote2 !== undefined && (
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm">{awayTeam} Win</span>
+                                            <span className="font-semibold">{votesData.vote.vote2} votes</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
-                {/* Incidents */}
-                {incidentsData?.incidents && incidentsData.incidents.length > 0 && (
-                    <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
-                        <h3 className="font-semibold text-lg mb-3 flex items-center">
-                            <Clock className="mr-2" size={20} />
-                            Match Incidents
-                        </h3>
-                        <div className="space-y-2">
-                            {incidentsData.incidents.slice(0, 10).map((incident: any, idx: number) => (
-                                <div key={idx} className="flex items-center border-l-4 border-blue-500 pl-3 py-2">
-                                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 mr-3">
-                                        {incident.time}'
-                                    </span>
-                                    <div className="flex-1">
-                                        <p className="text-sm">{incident.text || incident.incidentType}</p>
-                                        {incident.player && (
-                                            <p className="text-xs text-slate-500">{incident.player.name}</p>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                {activeTab === 'statistics' && (
+                    <div className="p-4">
+                        {statisticsData?.statistics ? (
+                            <SofascoreStatistics
+                                statistics={statisticsData.statistics}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
+                        ) : (
+                            <div className="text-center py-8 text-slate-500">
+                                No statistics data available
+                            </div>
+                        )}
                     </div>
                 )}
 
-                {/* Votes/Predictions */}
-                {votesData?.vote && (
-                    <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
-                        <h3 className="font-semibold text-lg mb-3 flex items-center">
-                            <Users className="mr-2" size={20} />
-                            User Predictions
-                        </h3>
-                        <div className="space-y-2">
-                            {votesData.vote.vote1 !== undefined && (
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm">{homeTeam} Win</span>
-                                    <span className="font-semibold">{votesData.vote.vote1} votes</span>
-                                </div>
-                            )}
-                            {votesData.vote.voteX !== undefined && votesData.vote.voteX !== null && (
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm">Draw</span>
-                                    <span className="font-semibold">{votesData.vote.voteX} votes</span>
-                                </div>
-                            )}
-                            {votesData.vote.vote2 !== undefined && (
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm">{awayTeam} Win</span>
-                                    <span className="font-semibold">{votesData.vote.vote2} votes</span>
-                                </div>
-                            )}
-                        </div>
+                {activeTab === 'lineups' && (
+                    <div className="p-4">
+                        {lineupsData ? (
+                            <SofascoreLineups
+                                lineups={lineupsData}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
+                        ) : (
+                            <div className="text-center py-8 text-slate-500">
+                                No lineup data available
+                            </div>
+                        )}
                     </div>
                 )}
 
-                {/* Head to Head */}
-                {h2hData?.teamDuel && (
-                    <div className="bg-slate-50 dark:bg-zinc-900/50 rounded-lg p-4">
-                        <h3 className="font-semibold text-lg mb-3">Head to Head</h3>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Previous encounters and statistics available
-                        </p>
+                {activeTab === 'momentum' && (
+                    <div className="p-4">
+                        {graphData?.graphPoints && graphData.graphPoints.length > 0 ? (
+                            <SofascoreMomentum
+                                graphData={graphData}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
+                        ) : (
+                            <div className="text-center py-8 text-slate-500">
+                                No momentum data available
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {activeTab === 'standings' && (
+                    <div className="p-4">
+                        {standingsData?.standings && standingsData.standings.length > 0 ? (
+                            <SofascoreStandings
+                                standingsData={standingsData}
+                                homeTeamId={eventDetails?.homeTeam?.id}
+                                awayTeamId={eventDetails?.awayTeam?.id}
+                            />
+                        ) : (
+                            <div className="text-center py-8 text-slate-500">
+                                No standings data available
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {activeTab === 'form' && (
+                    <div className="p-4">
+                        {standingsData && pregameFormData ? (
+                            <SofascorePrematchStandings
+                                standingsData={standingsData}
+                                pregameFormData={pregameFormData}
+                                homeTeamId={eventDetails?.homeTeam?.id}
+                                awayTeamId={eventDetails?.awayTeam?.id}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
+                        ) : (
+                            <div className="text-center py-8 text-slate-500">
+                                No form data available
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {activeTab === 'h2h' && (
+                    <div className="p-4">
+                        {h2hData ? (
+                            <SofascoreH2H
+                                h2hData={h2hData}
+                                homeTeamId={eventDetails?.homeTeam?.id}
+                                awayTeamId={eventDetails?.awayTeam?.id}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
+                        ) : (
+                            <div className="text-center py-8 text-slate-500">
+                                No head-to-head data available
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

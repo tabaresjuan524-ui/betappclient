@@ -314,7 +314,18 @@ const MatchItem = React.memo<MatchItemProps>(({ matchData, selectedBets, favorit
             </div>
             <div className="flex flex-col items-center gap-2 md:hidden ml-4">
                 <button onClick={() => handleFavoriteToggle(String(id), `${home_team} vs ${away_team}`)} className="text-slate-500 hover:text-yellow-500 dark:text-slate-400"><Star size={18} className={favoritedEvents.includes(String(id)) ? 'fill-current text-yellow-500' : ''} /></button>
-                <button onClick={() => setSelectedMatch(matchData)} className="text-xs bg-slate-200 h-8 w-8 flex items-center justify-center rounded hover:bg-slate-300 disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600" disabled={!markets || markets.length === 0}><span className="font-bold text-slate-700 dark:text-slate-300">+{matchData.marketsCount ? matchData.marketsCount : (markets.length || 0)}</span></button>
+                {/* Show SofaScore button if no markets but SofaScore event */}
+                {(!markets || markets.length === 0) && matchData.api_name === 'sofascore' && process.env.NEXT_PUBLIC_SOFASCORE_LIVE_WIDGETS === 'true' ? (
+                    <button 
+                        onClick={() => setSelectedMatch(matchData)} 
+                        className="text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white h-8 w-8 flex items-center justify-center rounded font-bold transition-all"
+                        title="View SofaScore Data"
+                    >
+                        <span className="text-[10px]">SS</span>
+                    </button>
+                ) : (
+                    <button onClick={() => setSelectedMatch(matchData)} className="text-xs bg-slate-200 h-8 w-8 flex items-center justify-center rounded hover:bg-slate-300 disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600" disabled={!markets || markets.length === 0}><span className="font-bold text-slate-700 dark:text-slate-300">+{matchData.marketsCount ? matchData.marketsCount : (markets.length || 0)}</span></button>
+                )}
             </div>
         </div>
 
@@ -383,6 +394,14 @@ const MatchItem = React.memo<MatchItemProps>(({ matchData, selectedBets, favorit
                     <button onClick={() => setSelectedMatch(matchData)} className="text-xs bg-slate-200 flex items-center justify-center rounded hover:bg-slate-300 disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600 p-2 px-3" disabled={!markets || markets.length === 0}>
                         <span className="inline-block font-bold text-slate-700 dark:text-slate-300">{matchData.marketsCount ? `+${matchData.marketsCount}` : `+${markets.length}`}</span>
                     </button>
+                    : matchData.api_name === 'sofascore' && process.env.NEXT_PUBLIC_SOFASCORE_LIVE_WIDGETS === 'true' ? (
+                        <button 
+                            onClick={() => setSelectedMatch(matchData)} 
+                            className="text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white flex items-center justify-center rounded font-semibold transition-all p-2 px-3"
+                        >
+                            <span className="inline-block">View Data</span>
+                        </button>
+                    )
                     : null
                 }
 
