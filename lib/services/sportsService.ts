@@ -453,19 +453,17 @@ const createWebSocketConnection = () => {
           store.dispatch(updateCodereData(data.codere.leftMenu));
         }
 
-        // 🆕 Process SofaScore data
+        // 🆕 Process SofaScore data (for future widget implementation)
         if (data.sofascore) {
-          console.log('✅ [SOFASCORE] Received data:', {
+          console.log('✅ [SOFASCORE] Received data (not displayed yet - for widgets only):', {
             totalEvents: data.sofascore.totalEvents,
             sportsCount: Object.keys(data.sofascore.sports || {}).length,
             lastUpdate: data.sofascore.lastUpdate
           });
           
-          // Convert SofaScore data to LiveEvent format for the frontend
-          const sofascoreLiveEvents = convertSofascoreToLiveEvents(data.sofascore);
-          if (sofascoreLiveEvents.length > 0) {
-            store.dispatch(updateLiveEvents(sofascoreLiveEvents));
-          }
+          // TODO: Store SofaScore data separately for widget implementation
+          // For now, DO NOT dispatch to liveEvents as it's not ready for display
+          // SofaScore will be used for live stats widgets in the future
         }
 
         // Clear loading state
@@ -500,23 +498,17 @@ const createWebSocketConnection = () => {
                   store.dispatch(updateCodereData(update.data.codere.leftMenu));
                 }
 
-                // 🆕 Handle SofaScore data in batched updates
+                // 🆕 Handle SofaScore data in batched updates (for future widget implementation)
                 if (update.data.sofascore) {
-                  console.log('✅ [SOFASCORE BATCH] Received data:', {
+                  console.log('✅ [SOFASCORE BATCH] Received data (not displayed yet - for widgets only):', {
                     totalEvents: update.data.sofascore.totalEvents,
                     sportsCount: Object.keys(update.data.sofascore.sports || {}).length,
                     lastUpdate: update.data.sofascore.lastUpdate
                   });
                   
-                  // Convert SofaScore data to LiveEvent format for the frontend
-                  const sofascoreLiveEvents = convertSofascoreToLiveEvents(update.data.sofascore);
-                  if (sofascoreLiveEvents.length > 0) {
-                    // Merge with existing Codere events instead of replacing
-                    const currentState = store.getState().odds;
-                    const existingCodereEvents = currentState.liveEvents.filter(event => event.api_name !== 'sofascore');
-                    const combinedEvents = [...existingCodereEvents, ...sofascoreLiveEvents];
-                    store.dispatch(updateLiveEvents(combinedEvents));
-                  }
+                  // TODO: Store SofaScore data separately for widget implementation
+                  // For now, DO NOT dispatch to liveEvents as it's not ready for display
+                  // SofaScore will be used for live stats widgets in the future
                 }
               }
               break;
