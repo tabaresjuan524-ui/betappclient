@@ -134,7 +134,22 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     const oddsData = detailedData?.[`event/${eventId}/odds/1/featured`];
     const allOddsData = detailedData?.[`event/${eventId}/odds/1/all`];
     const incidentsData = detailedData?.[`event/${eventId}/incidents`];
-    const h2hData = detailedData?.[`event/${eventId}/h2h`];
+    // Combine H2H data from both endpoints - basic stats and events history
+    const h2hBasic = detailedData?.[`event/${eventId}/h2h`];
+    const h2hEvents = detailedData?.[`event/${eventDetails?.customId}/h2h/events`];
+    const h2hData = h2hEvents || (h2hBasic?.events ? h2hBasic : null);
+    
+    // Debug H2H data extraction
+    console.log('🔍 H2H Debug:', {
+        eventId,
+        customId: eventDetails?.customId,
+        h2hBasicKey: `event/${eventId}/h2h`,
+        h2hEventsKey: `event/${eventDetails?.customId}/h2h/events`,
+        h2hBasicExists: !!h2hBasic,
+        h2hEventsExists: !!h2hEvents,
+        finalH2hData: !!h2hData,
+        eventsCount: h2hData?.events?.length || 0
+    });
     const statisticsData = detailedData?.[`event/${eventId}/statistics`];
     const votesData = detailedData?.[`event/${eventId}/votes`];
     const lineupsData = detailedData?.[`event/${eventId}/lineups`];
