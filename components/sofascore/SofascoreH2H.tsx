@@ -88,6 +88,48 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
         index === self.findIndex((e) => e.id === event.id)
     ).sort((a, b) => b.startTimestamp - a.startTimestamp);
 
+    // Debug logging
+    console.log('=== H2H Component Debug ===');
+    console.log('homeTeamId:', homeTeamId);
+    console.log('awayTeamId:', awayTeamId);
+    console.log('homeTeamLastEvents:', homeTeamLastEvents);
+    console.log('awayTeamLastEvents:', awayTeamLastEvents);
+    console.log('homeTeamNextEvents:', homeTeamNextEvents);
+    console.log('awayTeamNextEvents:', awayTeamNextEvents);
+    console.log('allMatches count:', allMatches.length);
+    console.log('allMatches sample:', allMatches.slice(0, 3));
+    console.log('h2hEvents count:', h2hEvents.length);
+    console.log('h2hEvents sample:', h2hEvents.slice(0, 3));
+    
+    // Check if last events have scores
+    if (homeTeamLastEvents?.events && homeTeamLastEvents.events.length > 0) {
+        const sampleLast = homeTeamLastEvents.events[0];
+        console.log('🔍 First LAST event detailed:', {
+            id: sampleLast.id,
+            homeTeam: sampleLast.homeTeam?.name,
+            awayTeam: sampleLast.awayTeam?.name,
+            status: sampleLast.status,
+            homeScore: sampleLast.homeScore,
+            awayScore: sampleLast.awayScore,
+            startTimestamp: sampleLast.startTimestamp,
+            fullObject: sampleLast
+        });
+    }
+    
+    if (homeTeamNextEvents?.events && homeTeamNextEvents.events.length > 0) {
+        const sampleNext = homeTeamNextEvents.events[0];
+        console.log('🔍 First NEXT event detailed:', {
+            id: sampleNext.id,
+            homeTeam: sampleNext.homeTeam?.name,
+            awayTeam: sampleNext.awayTeam?.name,
+            status: sampleNext.status,
+            homeScore: sampleNext.homeScore,
+            awayScore: sampleNext.awayScore,
+            startTimestamp: sampleNext.startTimestamp,
+            fullObject: sampleNext
+        });
+    }
+
     const displayH2HEvents = showAllH2H ? h2hEvents : h2hEvents.slice(0, 5);
     const displayMatches = showAllMatches ? allMatches : allMatches.slice(0, 10);
 
@@ -104,6 +146,22 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
         const hasScores = event.homeScore && event.awayScore && 
                          typeof event.homeScore.current !== 'undefined' && 
                          typeof event.awayScore.current !== 'undefined';
+
+        // Debug logging for each match
+        if (!isH2H) {
+            console.log(`Match ${event.id}:`, {
+                homeTeam: event.homeTeam.name,
+                awayTeam: event.awayTeam.name,
+                status: event.status.type,
+                isUpcoming,
+                isFinished,
+                hasScores,
+                homeScore: event.homeScore,
+                awayScore: event.awayScore,
+                homeScoreCurrent: event.homeScore?.current,
+                awayScoreCurrent: event.awayScore?.current
+            });
+        }
 
         // Determine result for badge
         const getResultForTeam = (teamId: number) => {

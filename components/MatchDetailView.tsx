@@ -294,7 +294,17 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
         for (const [sportName, sportData] of Object.entries(sofascoreData.sports)) {
             const sportDataTyped = sportData as any;
             const hasEvent = sportDataTyped?.liveEvents?.events?.some((e: any) => e.id === matchData.id);
+            
             if (hasEvent) {
+                // CRITICAL: Also check if event has detailedData (not just liveEvent entry)
+                const eventId = matchData.id.toString();
+                const hasDetailedData = sportDataTyped?.events?.[eventId];
+                
+                if (!hasDetailedData) {
+                    console.log('⚠️  Event found in liveEvents but no detailedData yet (still fetching)');
+                    return false;
+                }
+                
                 console.log('✅ Found SofaScore data for match in sport:', sportName);
                 return true;
             }

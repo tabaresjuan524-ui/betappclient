@@ -137,7 +137,19 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     // Combine H2H data from both endpoints - basic stats and events history
     const h2hBasic = detailedData?.[`event/${eventId}/h2h`];
     const h2hEvents = detailedData?.[`event/${eventDetails?.customId}/h2h/events`];
-    const h2hData = h2hEvents || (h2hBasic?.events ? h2hBasic : null);
+    
+    // Merge h2hBasic stats with h2hEvents data
+    let h2hData = null;
+    if (h2hEvents?.events) {
+        // If we have the events endpoint data, use it and merge with basic stats
+        h2hData = {
+            ...h2hBasic,
+            ...h2hEvents
+        };
+    } else if (h2hBasic?.events) {
+        // Fallback: if basic endpoint has events, use it
+        h2hData = h2hBasic;
+    }
     
     // Get team events data for H2H matches section
     const homeTeamLastEvents = detailedData?.[`team/${eventDetails?.homeTeam?.id}/events/last/0`];
@@ -152,7 +164,9 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
         h2hBasicKey: `event/${eventId}/h2h`,
         h2hEventsKey: `event/${eventDetails?.customId}/h2h/events`,
         h2hBasicExists: !!h2hBasic,
+        h2hBasic_teamDuel: h2hBasic?.teamDuel,
         h2hEventsExists: !!h2hEvents,
+        h2hEvents_eventsLength: h2hEvents?.events?.length || 0,
         finalH2hData: !!h2hData,
         eventsCount: h2hData?.events?.length || 0
     });
