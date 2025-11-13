@@ -230,61 +230,75 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
         );
     };
 
-    // Render team formation on field
+    // Render team formation on field (horizontal layout with absolute positioning)
     const renderFormationOnField = (team: TeamLineup, teamName: string, teamColor: string, isHome: boolean) => {
         const starters = team.players.filter(p => !p.substitute);
         
-        // Group by position
-        const goalkeepers = starters.filter(p => p.player.position === 'G');
-        const defenders = starters.filter(p => p.player.position === 'D');
-        const midfielders = starters.filter(p => p.player.position === 'M');
-        const forwards = starters.filter(p => p.player.position === 'F');
+        // Group by tactical position
+        const goalkeepers = starters.filter(p => p.position === 'G');
+        const defenders = starters.filter(p => p.position === 'D');
+        const midfielders = starters.filter(p => p.position === 'M');
+        const forwards = starters.filter(p => p.position === 'F');
+
+        // Parse formation (e.g., "3-5-2" = 3 columns with 3,5,2 players each)
+        const formationParts = team.formation.split('-').map(Number);
+        
+        // Build columns array - each formation number is a column with that many players
+        const columns: Player[][] = [];
+        
+        // Goalkeeper column (separate from formation)
+        if (goalkeepers.length > 0) {
+            columns.push(goalkeepers);
+        }
+        
+        // Collect all outfield players in order: defenders, midfielders, forwards
+        const outfieldPlayers = [...defenders, ...midfielders, ...forwards];
+        let playerIndex = 0;
+        
+        // Create columns based on formation numbers
+        // For "3-5-2": column with 3 players, column with 5 players, column with 2 players
+        formationParts.forEach(count => {
+            const columnPlayers = outfieldPlayers.slice(playerIndex, playerIndex + count);
+            if (columnPlayers.length > 0) {
+                columns.push(columnPlayers);
+            }
+            playerIndex += count;
+        });
+        
+        // Total columns for field width distribution (GK + formation columns)
+        const totalColumns = columns.length;
+        
+        // Calculate column positions as percentages
+        const getColumnPosition = (columnIndex: number) => {
+            if (totalColumns === 1) return 50;
+            return 5 + (columnIndex / (totalColumns - 1)) * 90; // 5% padding on edges
+        };
 
         return (
-            <div className={`relative h-full flex flex-col ${isHome ? 'justify-end' : 'justify-start'} p-4`}>
-                {/* Forwards */}
-                {forwards.length > 0 && (
-                    <div className="flex justify-around items-center mb-6">
-                        {forwards.map(p => (
-                            <div key={p.shirtNumber}>
-                                {renderFieldPlayer(p, teamColor, isHome)}
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {/* Midfielders */}
-                {midfielders.length > 0 && (
-                    <div className="flex justify-around items-center mb-6">
-                        {midfielders.map(p => (
-                            <div key={p.shirtNumber}>
-                                {renderFieldPlayer(p, teamColor, isHome)}
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {/* Defenders */}
-                {defenders.length > 0 && (
-                    <div className="flex justify-around items-center mb-6">
-                        {defenders.map(p => (
-                            <div key={p.shirtNumber}>
-                                {renderFieldPlayer(p, teamColor, isHome)}
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {/* Goalkeepers */}
-                {goalkeepers.length > 0 && (
-                    <div className="flex justify-around items-center">
-                        {goalkeepers.map(p => (
-                            <div key={p.shirtNumber}>
-                                {renderFieldPlayer(p, teamColor, isHome)}
-                            </div>
-                        ))}
-                    </div>
-                )}
+            <div className="relative w-full h-full">
+                {columns.map((column, colIdx) => {
+                    const leftPos = isHome ? getColumnPosition(colIdx) : 100 - getColumnPosition(colIdx);
+                    
+                    return (
+                        <div
+                            key={`column-${colIdx}`}
+                            className="absolute flex flex-col justify-center items-center gap-3"
+                            style={{
+                                left: `${leftPos}%`,
+                                top: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                minHeight: '70%',
+                                maxHeight: '90%'
+                            }}
+                        >
+                            {column.map((player, playerIdx) => (
+                                <div key={`${player.position}-${player.shirtNumber}-${colIdx}-${playerIdx}`}>
+                                    {renderFieldPlayer(player, teamColor, isHome)}
+                                </div>
+                            ))}
+                        </div>
+                    );
+                })}
             </div>
         );
     };
@@ -352,42 +366,43 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                     </button>
                 </div>
 
-                {/* Soccer Field */}
+                {/* Soccer Field - Horizontal */}
                 <div className="relative rounded-lg overflow-hidden" style={{ 
-                    background: 'linear-gradient(180deg, #2d5016 0%, #3a6b1e 25%, #3a6b1e 75%, #2d5016 100%)',
-                    minHeight: '600px'
+                    background: 'linear-gradient(90deg, #2d5016 0%, #3a6b1e 25%, #3a6b1e 75%, #2d5016 100%)',
+                    height: '500px',
+                    maxHeight: '500px'
                 }}>
                     {/* Field markings */}
                     <div className="absolute inset-0">
-                        {/* Center line */}
-                        <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-white/30" />
+                        {/* Center line (vertical) */}
+                        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30" />
                         
                         {/* Center circle */}
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-white/30" />
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-white/30" />
                         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white/30" />
                         
                         {/* Penalty boxes */}
-                        <div className="absolute left-1/4 right-1/4 top-0 h-16 border-2 border-t-0 border-white/30" />
-                        <div className="absolute left-1/4 right-1/4 bottom-0 h-16 border-2 border-b-0 border-white/30" />
+                        <div className="absolute top-1/4 bottom-1/4 left-0 w-16 border-2 border-l-0 border-white/30" />
+                        <div className="absolute top-1/4 bottom-1/4 right-0 w-16 border-2 border-r-0 border-white/30" />
                         
                         {/* Goal boxes */}
-                        <div className="absolute left-1/3 right-1/3 top-0 h-8 border-2 border-t-0 border-white/30" />
-                        <div className="absolute left-1/3 right-1/3 bottom-0 h-8 border-2 border-b-0 border-white/30" />
+                        <div className="absolute top-1/3 bottom-1/3 left-0 w-8 border-2 border-l-0 border-white/30" />
+                        <div className="absolute top-1/3 bottom-1/3 right-0 w-8 border-2 border-r-0 border-white/30" />
                     </div>
 
-                    {/* Teams on field */}
-                    <div className="relative grid grid-rows-2 h-full">
-                        {/* Home team (top half) */}
-                        <div className="relative border-b border-white/20">
-                            <div className="absolute top-2 left-4 text-white font-bold text-sm px-2 py-1 rounded" style={{ backgroundColor: homeTeamColor }}>
+                    {/* Teams on field - Horizontal layout */}
+                    <div className="relative grid grid-cols-2 h-full">
+                        {/* Home team (left half) */}
+                        <div className="relative border-r border-white/20">
+                            <div className="absolute top-2 left-2 text-white font-bold text-xs px-2 py-1 rounded" style={{ backgroundColor: homeTeamColor }}>
                                 {homeTeamName} - {lineups.home.formation}
                             </div>
                             {renderFormationOnField(lineups.home, homeTeamName, homeTeamColor, true)}
                         </div>
 
-                        {/* Away team (bottom half) */}
+                        {/* Away team (right half) */}
                         <div className="relative">
-                            <div className="absolute bottom-2 left-4 text-white font-bold text-sm px-2 py-1 rounded" style={{ backgroundColor: awayTeamColor }}>
+                            <div className="absolute top-2 right-2 text-white font-bold text-xs px-2 py-1 rounded" style={{ backgroundColor: awayTeamColor }}>
                                 {awayTeamName} - {lineups.away.formation}
                             </div>
                             {renderFormationOnField(lineups.away, awayTeamName, awayTeamColor, false)}
@@ -526,12 +541,13 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                         </thead>
                         <tbody>
                             {sortedPlayers.map((player) => {
-                                const isHomePlayer = lineups.home.players.some(p => p.shirtNumber === player.shirtNumber);
                                 const stats = player.statistics;
                                 const rating = stats?.rating;
+                                const isHomePlayer = lineups.home.players.some(p => p.shirtNumber === player.shirtNumber && p.player.name === player.player.name);
+                                const uniqueKey = `${isHomePlayer ? 'home' : 'away'}-${player.shirtNumber}-${player.player.name.replace(/\s+/g, '-')}`;
                                 
                                 return (
-                                    <tr key={player.shirtNumber} className={`border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 ${getRatingBgColor(rating)}`}>
+                                    <tr key={uniqueKey} className={`border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 ${getRatingBgColor(rating)}`}>
                                         <td className="p-2">
                                             <div className="flex items-center gap-2">
                                                 {player.player.country?.alpha2 && (
