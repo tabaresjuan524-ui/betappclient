@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Team {
     name: string;
@@ -33,7 +34,11 @@ interface H2HEvent {
             name: string;
         };
     };
-    winnerCode?: number; // 1=home, 2=away, 3=draw
+    winnerCode?: number;
+}
+
+interface TeamEventsData {
+    events?: H2HEvent[];
 }
 
 interface H2HData {
@@ -48,6 +53,10 @@ interface SofascoreH2HProps {
     awayTeamName: string;
     homeTeamColor?: string;
     awayTeamColor?: string;
+    homeTeamLastEvents?: TeamEventsData;
+    awayTeamLastEvents?: TeamEventsData;
+    homeTeamNextEvents?: TeamEventsData;
+    awayTeamNextEvents?: TeamEventsData;
 }
 
 const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
@@ -58,8 +67,132 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
     awayTeamName,
     homeTeamColor = '#3b82f6',
     awayTeamColor = '#ef4444',
+    homeTeamLastEvents,
+    awayTeamLastEvents,
+    homeTeamNextEvents,
+    awayTeamNextEvents,
 }) => {
-    if (!h2hData || !h2hData.events || h2hData.events.length === 0) {
+    const [activeTab, setActiveTab] = useState<'h2h' | 'matches'>('h2h');
+    const [showAllH2H, setShowAllH2H] = useState(false);
+    const [showAllMatches, setShowAllMatches] = useState(false);
+
+    const h2hEvents = h2hData?.events || [];
+    
+    // Combine all team matches (last + next)
+    const allMatches = [
+        ...(homeTeamNextEvents?.events || []),
+        ...(awayTeamNextEvents?.events || []),
+        ...(homeTeamLastEvents?.events || []),
+        ...(awayTeamLastEvents?.events || []),
+    ].filter((event, index, self) => 
+        index === self.findIndex((e) => e.id === event.id)
+    ).sort((a, b) => b.startTimestamp - a.startTimestamp);
+
+    const displayH2HEvents = showAllH2H ? h2hEvents : h2hEvents.slice(0, 5);
+    const displayMatches = showAllMatches ? allMatches : allMatches.slice(0, 10);
+
+    const getTeamLogo = (teamId: number) => {
+        return `https://img.sofascore.com/api/v1/team/${teamId}/image/small`;
+    };
+
+    const getResultBadge = (event: H2HEvent, teamId: number) => {
+        const isHome = event.homeTeam.id === teamId;
+        const teamScore = isHome ? event.homeScore.current : event.awayScore.current;
+        const opponentScore = isHome ? event.awayScore.current : event.homeScore.current;
+
+        if (event.status.type === 'notstarted') {
+            return <span className="text-xs text-slate-400">-</span>;
+        }
+
+        if (teamScore > opponentScore) {
+            return <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-bold">W</div>;
+        } else if (teamScore < opponentScore) {
+            return <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-white text-xs font-bold">L</div>;
+        } else {
+            return <div className="w-6 h-6 rounded-full bg-slate-400 flex items-center justify-center text-white text-xs font-bold">D</div>;
+        }
+    };
+
+    const renderMatch = (event: H2HEvent, isH2H: boolean = false) => {
+        const isLive = event.status.type === 'inprogress';
+        const isFinished = event.status.type === 'finished';
+        const isUpcoming = event.status.type === 'notstarted';
+
+        return (
+            <div key={event.id} className="py-3 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <div className="flex items-center justify-between">
+                    {/* Date/Status */}
+                    <div className="w-20 text-xs text-slate-500 dark:text-slate-400">
+                        {isLive && <span className="text-green-500 font-semibold">LIVE</span>}
+                        {isFinished && format(new Date(event.startTimestamp * 1000), 'dd/MM/yy')}
+                        {isUpcoming && format(new Date(event.startTimestamp * 1000), 'dd/MM HH:mm')}
+                    </div>
+
+                    {/* Teams and Scores */}
+                    <div className="flex-1 px-4">
+                        {/* Home Team */}
+                        <div className="flex items-center justify-between mb-1">
+                            <div className="flex items-center flex-1">
+                                <img 
+                                    src={getTeamLogo(event.homeTeam.id)} 
+                                    alt={event.homeTeam.name}
+                                    className="w-5 h-5 mr-2"
+                                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                />
+                                <span className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                                    {event.homeTeam.shortName || event.homeTeam.name}
+                                </span>
+                            </div>
+                            {!isUpcoming && (
+                                <span className={`text-sm font-bold ml-2 ${
+                                    event.homeScore.current > event.awayScore.current ? 'text-green-600' : 'text-slate-600 dark:text-slate-400'
+                                }`}>
+                                    {event.homeScore.current}
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Away Team */}
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center flex-1">
+                                <img 
+                                    src={getTeamLogo(event.awayTeam.id)} 
+                                    alt={event.awayTeam.name}
+                                    className="w-5 h-5 mr-2"
+                                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                />
+                                <span className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                                    {event.awayTeam.shortName || event.awayTeam.name}
+                                </span>
+                            </div>
+                            {!isUpcoming && (
+                                <span className={`text-sm font-bold ml-2 ${
+                                    event.awayScore.current > event.homeScore.current ? 'text-green-600' : 'text-slate-600 dark:text-slate-400'
+                                }`}>
+                                    {event.awayScore.current}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Competition */}
+                    <div className="w-32 text-xs text-slate-500 dark:text-slate-400 text-right truncate">
+                        {event.tournament?.name}
+                    </div>
+
+                    {/* Result Badge (only for H2H and only for our teams) */}
+                    {isH2H && !isUpcoming && (
+                        <div className="w-8 ml-2">
+                            {event.homeTeam.id === homeTeamId && getResultBadge(event, homeTeamId)}
+                            {event.awayTeam.id === homeTeamId && getResultBadge(event, homeTeamId)}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
+    if (!h2hData && !allMatches.length) {
         return (
             <div className="bg-white dark:bg-slate-800 rounded-lg p-6 text-center text-slate-500 dark:text-slate-400">
                 <p>No head-to-head data available</p>
@@ -67,218 +200,91 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
         );
     }
 
-    const { events } = h2hData;
-
-    // Calculate statistics
-    const homeWins = events.filter(e => {
-        if (e.homeTeam.id === homeTeamId) {
-            return e.homeScore.current > e.awayScore.current;
-        } else if (e.awayTeam.id === homeTeamId) {
-            return e.awayScore.current > e.homeScore.current;
-        }
-        return false;
-    }).length;
-
-    const awayWins = events.filter(e => {
-        if (e.homeTeam.id === awayTeamId) {
-            return e.homeScore.current > e.awayScore.current;
-        } else if (e.awayTeam.id === awayTeamId) {
-            return e.awayScore.current > e.homeScore.current;
-        }
-        return false;
-    }).length;
-
-    const draws = events.filter(e => e.homeScore.current === e.awayScore.current).length;
-
-    const totalHomeGoals = events.reduce((sum, e) => {
-        if (e.homeTeam.id === homeTeamId) {
-            return sum + e.homeScore.current;
-        } else if (e.awayTeam.id === homeTeamId) {
-            return sum + e.awayScore.current;
-        }
-        return sum;
-    }, 0);
-
-    const totalAwayGoals = events.reduce((sum, e) => {
-        if (e.homeTeam.id === awayTeamId) {
-            return sum + e.homeScore.current;
-        } else if (e.awayTeam.id === awayTeamId) {
-            return sum + e.awayScore.current;
-        }
-        return sum;
-    }, 0);
-
-    const getResultBadge = (event: H2HEvent) => {
-        const isHomeTeamHome = event.homeTeam.id === homeTeamId;
-        const homeGoals = event.homeScore.current;
-        const awayGoals = event.awayScore.current;
-
-        let result: 'W' | 'D' | 'L';
-        if (homeGoals > awayGoals) {
-            result = isHomeTeamHome ? 'W' : 'L';
-        } else if (awayGoals > homeGoals) {
-            result = isHomeTeamHome ? 'L' : 'W';
-        } else {
-            result = 'D';
-        }
-
-        const bgColor = result === 'W' ? 'bg-green-500' : result === 'D' ? 'bg-yellow-500' : 'bg-red-500';
-
-        return (
-            <div className={`${bgColor} text-white text-xs font-bold px-2 py-1 rounded`}>
-                {result}
-            </div>
-        );
-    };
-
     return (
         <div className="bg-white dark:bg-slate-800 rounded-lg overflow-hidden">
-            {/* Header */}
-            <div className="p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                <h3 className="text-lg font-bold text-center">Head to Head</h3>
-                <p className="text-xs text-center mt-1 text-blue-100">
-                    Previous {events.length} encounter{events.length !== 1 ? 's' : ''}
-                </p>
+            {/* Tab Headers */}
+            <div className="flex border-b border-slate-200 dark:border-slate-700">
+                <button
+                    onClick={() => setActiveTab('h2h')}
+                    className={`flex-1 py-3 px-4 text-sm font-semibold transition-colors ${
+                        activeTab === 'h2h'
+                            ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 bg-white dark:bg-slate-800'
+                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+                    }`}
+                >
+                    Head-to-head
+                </button>
+                <button
+                    onClick={() => setActiveTab('matches')}
+                    className={`flex-1 py-3 px-4 text-sm font-semibold transition-colors ${
+                        activeTab === 'matches'
+                            ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 bg-white dark:bg-slate-800'
+                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+                    }`}
+                >
+                    Matches
+                </button>
             </div>
 
-            {/* Statistics Summary */}
-            <div className="p-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                    {/* Home Team Stats */}
+            {/* Tab Content */}
+            <div className="p-4">
+                {activeTab === 'h2h' && (
                     <div>
-                        <div 
-                            className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-white text-2xl font-bold mb-2"
-                            style={{ backgroundColor: homeTeamColor }}
-                        >
-                            {homeWins}
-                        </div>
-                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            {homeTeamName}
-                        </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                            {totalHomeGoals} goals
-                        </p>
-                    </div>
-
-                    {/* Draws */}
-                    <div>
-                        <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center bg-slate-400 dark:bg-slate-600 text-white text-2xl font-bold mb-2">
-                            {draws}
-                        </div>
-                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Draws
-                        </p>
-                    </div>
-
-                    {/* Away Team Stats */}
-                    <div>
-                        <div 
-                            className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-white text-2xl font-bold mb-2"
-                            style={{ backgroundColor: awayTeamColor }}
-                        >
-                            {awayWins}
-                        </div>
-                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            {awayTeamName}
-                        </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                            {totalAwayGoals} goals
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Match History */}
-            <div className="divide-y divide-slate-200 dark:divide-slate-700">
-                {events.map((event) => {
-                    const isHomeTeamHome = event.homeTeam.id === homeTeamId;
-                    const displayHomeTeam = isHomeTeamHome ? event.homeTeam : event.awayTeam;
-                    const displayAwayTeam = isHomeTeamHome ? event.awayTeam : event.homeTeam;
-                    const displayHomeScore = isHomeTeamHome ? event.homeScore.current : event.awayScore.current;
-                    const displayAwayScore = isHomeTeamHome ? event.awayScore.current : event.homeScore.current;
-
-                    return (
-                        <div 
-                            key={event.id} 
-                            className="p-4 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                        >
-                            <div className="flex items-center justify-between mb-2">
-                                {/* Date and Competition */}
-                                <div className="text-xs text-slate-500 dark:text-slate-400">
-                                    <p className="font-semibold">
-                                        {format(new Date(event.startTimestamp * 1000), 'dd MMM yyyy')}
-                                    </p>
-                                    <p className="text-[10px]">
-                                        {event.tournament?.category?.name} - {event.tournament?.name}
-                                    </p>
+                        {h2hEvents.length === 0 ? (
+                            <p className="text-center text-slate-500 dark:text-slate-400 py-8">
+                                No head-to-head matches found
+                            </p>
+                        ) : (
+                            <>
+                                <div className="space-y-1">
+                                    {displayH2HEvents.map(event => renderMatch(event, true))}
                                 </div>
-
-                                {/* Result Badge */}
-                                {getResultBadge(event)}
-                            </div>
-
-                            {/* Match Result */}
-                            <div className="flex items-center justify-between">
-                                {/* Home Team */}
-                                <div className="flex-1 text-right pr-3">
-                                    <p className={`text-sm font-semibold ${
-                                        displayHomeScore > displayAwayScore 
-                                            ? 'text-slate-800 dark:text-slate-100' 
-                                            : 'text-slate-500 dark:text-slate-400'
-                                    }`}>
-                                        {displayHomeTeam.shortName || displayHomeTeam.name}
-                                    </p>
-                                </div>
-
-                                {/* Score */}
-                                <div className="px-4 py-2 bg-slate-100 dark:bg-slate-700 rounded">
-                                    <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                                        {displayHomeScore} - {displayAwayScore}
-                                    </p>
-                                </div>
-
-                                {/* Away Team */}
-                                <div className="flex-1 text-left pl-3">
-                                    <p className={`text-sm font-semibold ${
-                                        displayAwayScore > displayHomeScore 
-                                            ? 'text-slate-800 dark:text-slate-100' 
-                                            : 'text-slate-500 dark:text-slate-400'
-                                    }`}>
-                                        {displayAwayTeam.shortName || displayAwayTeam.name}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* Footer Stats */}
-            <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <div className="grid grid-cols-2 gap-4 text-xs">
-                    <div>
-                        <p className="text-slate-500 dark:text-slate-400">Average goals per game</p>
-                        <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                            {((totalHomeGoals + totalAwayGoals) / events.length).toFixed(1)}
-                        </p>
+                                
+                                {h2hEvents.length > 5 && (
+                                    <button
+                                        onClick={() => setShowAllH2H(!showAllH2H)}
+                                        className="w-full mt-4 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center transition-colors"
+                                    >
+                                        {showAllH2H ? (
+                                            <>Show less <ChevronUp size={16} className="ml-1" /></>
+                                        ) : (
+                                            <>Show more <ChevronDown size={16} className="ml-1" /></>
+                                        )}
+                                    </button>
+                                )}
+                            </>
+                        )}
                     </div>
+                )}
+
+                {activeTab === 'matches' && (
                     <div>
-                        <p className="text-slate-500 dark:text-slate-400">Win percentage</p>
-                        <div className="flex gap-2 mt-1">
-                            <div>
-                                <span className="text-sm font-bold" style={{ color: homeTeamColor }}>
-                                    {((homeWins / events.length) * 100).toFixed(0)}%
-                                </span>
-                            </div>
-                            <span className="text-slate-400">|</span>
-                            <div>
-                                <span className="text-sm font-bold" style={{ color: awayTeamColor }}>
-                                    {((awayWins / events.length) * 100).toFixed(0)}%
-                                </span>
-                            </div>
-                        </div>
+                        {allMatches.length === 0 ? (
+                            <p className="text-center text-slate-500 dark:text-slate-400 py-8">
+                                No matches found
+                            </p>
+                        ) : (
+                            <>
+                                <div className="space-y-1">
+                                    {displayMatches.map(event => renderMatch(event, false))}
+                                </div>
+                                
+                                {allMatches.length > 10 && (
+                                    <button
+                                        onClick={() => setShowAllMatches(!showAllMatches)}
+                                        className="w-full mt-4 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center transition-colors"
+                                    >
+                                        {showAllMatches ? (
+                                            <>Show less <ChevronUp size={16} className="ml-1" /></>
+                                        ) : (
+                                            <>Show more <ChevronDown size={16} className="ml-1" /></>
+                                        )}
+                                    </button>
+                                )}
+                            </>
+                        )}
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

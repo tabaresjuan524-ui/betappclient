@@ -139,6 +139,12 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     const h2hEvents = detailedData?.[`event/${eventDetails?.customId}/h2h/events`];
     const h2hData = h2hEvents || (h2hBasic?.events ? h2hBasic : null);
     
+    // Get team events data for H2H matches section
+    const homeTeamLastEvents = detailedData?.[`team/${eventDetails?.homeTeam?.id}/events/last/0`];
+    const awayTeamLastEvents = detailedData?.[`team/${eventDetails?.awayTeam?.id}/events/last/0`];
+    const homeTeamNextEvents = detailedData?.[`team/${eventDetails?.homeTeam?.id}/events/next/0`];
+    const awayTeamNextEvents = detailedData?.[`team/${eventDetails?.awayTeam?.id}/events/next/0`];
+    
     // Debug H2H data extraction
     console.log('🔍 H2H Debug:', {
         eventId,
@@ -491,6 +497,10 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
                                 awayTeamName={awayTeam}
                                 homeTeamColor={homeTeamColor}
                                 awayTeamColor={awayTeamColor}
+                                homeTeamLastEvents={homeTeamLastEvents}
+                                awayTeamLastEvents={awayTeamLastEvents}
+                                homeTeamNextEvents={homeTeamNextEvents}
+                                awayTeamNextEvents={awayTeamNextEvents}
                             />
                         ) : (
                             <div className="text-center py-8 text-slate-500">
