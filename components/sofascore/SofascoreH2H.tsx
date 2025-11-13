@@ -95,37 +95,65 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
         return `https://img.sofascore.com/api/v1/team/${teamId}/image/small`;
     };
 
-    const getResultBadge = (event: H2HEvent, teamId: number) => {
-        const isHome = event.homeTeam.id === teamId;
-        const teamScore = isHome ? event.homeScore.current : event.awayScore.current;
-        const opponentScore = isHome ? event.awayScore.current : event.homeScore.current;
-
-        if (event.status.type === 'notstarted') {
-            return <span className="text-xs text-slate-400">-</span>;
-        }
-
-        if (teamScore > opponentScore) {
-            return <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-bold">W</div>;
-        } else if (teamScore < opponentScore) {
-            return <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-white text-xs font-bold">L</div>;
-        } else {
-            return <div className="w-6 h-6 rounded-full bg-slate-400 flex items-center justify-center text-white text-xs font-bold">D</div>;
-        }
-    };
-
     const renderMatch = (event: H2HEvent, isH2H: boolean = false) => {
         const isLive = event.status.type === 'inprogress';
         const isFinished = event.status.type === 'finished';
         const isUpcoming = event.status.type === 'notstarted';
 
+        // Check if scores exist
+        const hasScores = event.homeScore && event.awayScore && 
+                         typeof event.homeScore.current !== 'undefined' && 
+                         typeof event.awayScore.current !== 'undefined';
+
+        // Determine result for badge
+        const getResultForTeam = (teamId: number) => {
+            if (!hasScores) return '';
+            
+            const isHome = event.homeTeam.id === teamId;
+            const teamScore = isHome ? event.homeScore.current : event.awayScore.current;
+            const opponentScore = isHome ? event.awayScore.current : event.homeScore.current;
+
+            if (teamScore > opponentScore) return 'W';
+            if (teamScore < opponentScore) return 'L';
+            return 'D';
+        };
+
+        const getResultColor = (result: string) => {
+            if (result === 'W') return 'bg-green-500';
+            if (result === 'L') return 'bg-red-500';
+            return 'bg-slate-400';
+        };
+
+        // Determine which team's result to show
+        let resultBadge = '';
+        if (hasScores && !isUpcoming) {
+            if (isH2H) {
+                // For H2H tab, show result from perspective of home team
+                resultBadge = getResultForTeam(homeTeamId);
+            } else {
+                // For Matches tab, show result for whichever team from main match is playing
+                if (event.homeTeam.id === homeTeamId || event.homeTeam.id === awayTeamId) {
+                    resultBadge = getResultForTeam(event.homeTeam.id);
+                } else if (event.awayTeam.id === homeTeamId || event.awayTeam.id === awayTeamId) {
+                    resultBadge = getResultForTeam(event.awayTeam.id);
+                }
+            }
+        }
+
         return (
-            <div key={event.id} className="py-3 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+            <div key={event.id} className="py-2 border-b border-slate-200 dark:border-slate-700 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <div className="flex items-center justify-between">
                     {/* Date/Status */}
-                    <div className="w-20 text-xs text-slate-500 dark:text-slate-400">
-                        {isLive && <span className="text-green-500 font-semibold">LIVE</span>}
-                        {isFinished && format(new Date(event.startTimestamp * 1000), 'dd/MM/yy')}
-                        {isUpcoming && format(new Date(event.startTimestamp * 1000), 'dd/MM HH:mm')}
+                    <div className="flex flex-col items-start w-20 text-xs text-slate-500 dark:text-slate-400">
+                        <div>
+                            {isLive && <span className="text-green-500 font-semibold">LIVE</span>}
+                            {isFinished && format(new Date(event.startTimestamp * 1000), 'dd/MM/yy')}
+                            {isUpcoming && format(new Date(event.startTimestamp * 1000), 'dd/MM/yy')}
+                        </div>
+                        <div className="mt-0.5">
+                            {isFinished && <span className="text-slate-400">FT</span>}
+                            {isUpcoming && format(new Date(event.startTimestamp * 1000), 'HH:mm')}
+                        </div>
                     </div>
 
                     {/* Teams and Scores */}
@@ -136,16 +164,16 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
                                 <img 
                                     src={getTeamLogo(event.homeTeam.id)} 
                                     alt={event.homeTeam.name}
-                                    className="w-5 h-5 mr-2"
+                                    className="w-4 h-4 mr-2"
                                     onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                 />
-                                <span className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                                <span className="text-sm text-slate-800 dark:text-slate-100">
                                     {event.homeTeam.shortName || event.homeTeam.name}
                                 </span>
                             </div>
-                            {!isUpcoming && (
-                                <span className={`text-sm font-bold ml-2 ${
-                                    event.homeScore.current > event.awayScore.current ? 'text-green-600' : 'text-slate-600 dark:text-slate-400'
+                            {hasScores && !isUpcoming && (
+                                <span className={`text-sm font-bold ml-2 min-w-[20px] text-right ${
+                                    event.homeScore.current > event.awayScore.current ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
                                 }`}>
                                     {event.homeScore.current}
                                 </span>
@@ -158,16 +186,16 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
                                 <img 
                                     src={getTeamLogo(event.awayTeam.id)} 
                                     alt={event.awayTeam.name}
-                                    className="w-5 h-5 mr-2"
+                                    className="w-4 h-4 mr-2"
                                     onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                 />
-                                <span className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                                <span className="text-sm text-slate-800 dark:text-slate-100">
                                     {event.awayTeam.shortName || event.awayTeam.name}
                                 </span>
                             </div>
-                            {!isUpcoming && (
-                                <span className={`text-sm font-bold ml-2 ${
-                                    event.awayScore.current > event.homeScore.current ? 'text-green-600' : 'text-slate-600 dark:text-slate-400'
+                            {hasScores && !isUpcoming && (
+                                <span className={`text-sm font-bold ml-2 min-w-[20px] text-right ${
+                                    event.awayScore.current > event.homeScore.current ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'
                                 }`}>
                                     {event.awayScore.current}
                                 </span>
@@ -176,16 +204,18 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
                     </div>
 
                     {/* Competition */}
-                    <div className="w-32 text-xs text-slate-500 dark:text-slate-400 text-right truncate">
+                    <div className="w-28 text-xs text-slate-500 dark:text-slate-400 text-right truncate mr-2">
                         {event.tournament?.name}
                     </div>
 
-                    {/* Result Badge (only for H2H and only for our teams) */}
-                    {isH2H && !isUpcoming && (
-                        <div className="w-8 ml-2">
-                            {event.homeTeam.id === homeTeamId && getResultBadge(event, homeTeamId)}
-                            {event.awayTeam.id === homeTeamId && getResultBadge(event, homeTeamId)}
+                    {/* Result Badge - Show for all matches */}
+                    {!isUpcoming && resultBadge && (
+                        <div className={`w-6 h-6 rounded-full ${getResultColor(resultBadge)} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
+                            {resultBadge}
                         </div>
+                    )}
+                    {isUpcoming && (
+                        <div className="w-6 h-6 flex-shrink-0" />
                     )}
                 </div>
             </div>
