@@ -3,7 +3,7 @@ import { ArrowLeft, TrendingUp, TrendingDown, Clock, Users, Target, BarChart3, S
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import SofascoreStatistics from './sofascore/SofascoreStatistics';
-import SofascoreLineups from './sofascore/SofascoreLineups';
+import SofascoreLineups from './sofascore/SofascoreLineupsNew';
 import SofascoreMomentum from './sofascore/SofascoreMomentum';
 import SofascoreStandings from './sofascore/SofascoreStandings';
 import SofascoreH2H from './sofascore/SofascoreH2H';

@@ -695,14 +695,17 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
     }, [])
     
     // If showing SofaScore widget view, render that instead
-    if (showSofascoreWidget && hasSofascoreData) {
+    // Keep widget open even if data temporarily becomes unavailable during refresh
+    if (showSofascoreWidget) {
         // Find the sport name for this event
         let sportName = '';
-        for (const [sport, sportData] of Object.entries(sofascoreData.sports)) {
-            const sportDataTyped = sportData as any;
-            if (sportDataTyped?.liveEvents?.events?.some((e: any) => e.id === matchData.id)) {
-                sportName = sport;
-                break;
+        if (sofascoreData?.sports) {
+            for (const [sport, sportData] of Object.entries(sofascoreData.sports)) {
+                const sportDataTyped = sportData as any;
+                if (sportDataTyped?.liveEvents?.events?.some((e: any) => e.id === matchData.id)) {
+                    sportName = sport;
+                    break;
+                }
             }
         }
         

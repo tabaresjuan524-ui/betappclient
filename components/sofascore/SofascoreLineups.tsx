@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Shield, TrendingUp, Calendar, DollarSign, Ruler, ArrowUpDown } from 'lucide-react';
 
 interface Player {
     player: {
@@ -11,6 +12,10 @@ interface Player {
             name: string;
             alpha2: string;
         };
+        id?: number;
+        height?: number;
+        dateOfBirthTimestamp?: number;
+        marketValueCurrency?: string;
     };
     shirtNumber: number;
     position: string;
@@ -25,6 +30,33 @@ interface Player {
         redCards?: number;
         totalPass?: number;
         accuratePass?: number;
+        accuratePassPercentage?: number;
+        totalDuels?: number;
+        groundDuelsWon?: number;
+        aerialDuelsWon?: number;
+        tacklesWon?: number;
+        possessionLostCtrl?: number;
+        wasFouled?: number;
+        fouls?: number;
+        offsides?: number;
+        saves?: number;
+        punches?: number;
+        highClaims?: number;
+        shotsOnTarget?: number;
+        shotsOffTarget?: number;
+        blockedShots?: number;
+        dribbles?: number;
+        interceptions?: number;
+        clearances?: number;
+        defensiveActions?: number;
+        keyPasses?: number;
+        crossesSuccessful?: number;
+        totalCrosses?: number;
+        bigChancesCreated?: number;
+        bigChancesMissed?: number;
+        touches?: number;
+        longBallsAccurate?: number;
+        longBallsTotal?: number;
     };
 }
 
@@ -55,6 +87,10 @@ interface SofascoreLineupsProps {
     awayTeamColor?: string;
 }
 
+type ViewMode = 'lineups' | 'player-stats';
+type LineupFilter = 'performance' | 'club' | 'age' | 'market-value' | 'height';
+type StatsCategory = 'general' | 'attacking' | 'defending' | 'passing' | 'duels' | 'goalkeeping';
+
 const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     lineups,
     homeTeamName,
@@ -62,6 +98,12 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     homeTeamColor = '#3b82f6',
     awayTeamColor = '#ef4444',
 }) => {
+    const [viewMode, setViewMode] = useState<ViewMode>('lineups');
+    const [lineupFilter, setLineupFilter] = useState<LineupFilter>('performance');
+    const [statsCategory, setStatsCategory] = useState<StatsCategory>('general');
+    const [sortBy, setSortBy] = useState<string>('rating');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
     if (!lineups || !lineups.home || !lineups.away) {
         return (
             <div className="bg-white dark:bg-slate-800 rounded-lg p-6 text-center text-slate-500 dark:text-slate-400">
@@ -69,6 +111,23 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
             </div>
         );
     }
+
+    const calculateAge = (timestamp?: number) => {
+        if (!timestamp) return null;
+        const birthDate = new Date(timestamp * 1000);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
+    const getPlayerImageUrl = (playerId?: number) => {
+        if (!playerId) return null;
+        return `https://img.sofascore.com/api/v1/player/${playerId}/image`;
+    };
 
     const renderPlayerCard = (player: Player, teamColor: string, isHome: boolean) => {
         const rating = player.statistics?.rating;
