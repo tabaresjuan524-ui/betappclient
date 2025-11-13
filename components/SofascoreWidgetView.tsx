@@ -424,6 +424,8 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
                                 lineups={lineupsData}
                                 homeTeamName={homeTeam}
                                 awayTeamName={awayTeam}
+                                homeTeamId={eventDetails?.homeTeam?.id}
+                                awayTeamId={eventDetails?.awayTeam?.id}
                                 homeTeamColor={homeTeamColor}
                                 awayTeamColor={awayTeamColor}
                             />

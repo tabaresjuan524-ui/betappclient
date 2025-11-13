@@ -19,6 +19,7 @@ interface Player {
             alpha2: string;
         };
     };
+    teamId?: number;
     shirtNumber: number;
     position: string;
     substitute: boolean;
@@ -71,6 +72,8 @@ interface SofascoreLineupsProps {
     lineups?: LineupsData;
     homeTeamName: string;
     awayTeamName: string;
+    homeTeamId?: number;
+    awayTeamId?: number;
     homeTeamColor?: string;
     awayTeamColor?: string;
 }
@@ -83,6 +86,8 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     lineups,
     homeTeamName,
     awayTeamName,
+    homeTeamId,
+    awayTeamId,
     homeTeamColor = '#3b82f6',
     awayTeamColor = '#ef4444',
 }) => {
@@ -152,14 +157,18 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     };
 
     // Render player on field
-    const renderFieldPlayer = (player: Player, teamColor: string, isHome: boolean) => {
+    const renderFieldPlayer = (player: Player, teamColor: string, isHome: boolean, teamId?: number) => {
         const imageUrl = getPlayerImageUrl(player.player.id);
         const rating = player.statistics?.rating;
         const age = calculateAge(player.player.dateOfBirthTimestamp);
 
         let displayValue = '';
+        let showClubIcon = false;
+        
         if (lineupFilter === 'performance' && rating) {
             displayValue = rating.toFixed(1);
+        } else if (lineupFilter === 'club') {
+            showClubIcon = true;
         } else if (lineupFilter === 'age' && age) {
             displayValue = `${age} y`;
         } else if (lineupFilter === 'height' && player.player.height) {
@@ -170,9 +179,24 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
         }
 
         return (
-            <div className="flex flex-col items-center relative">
+            <div className="flex items-center gap-1 relative" style={{ flexDirection: isHome ? 'row-reverse' : 'row' }}>
+                {/* Player Name (right for home, left for away) */}
+                <div className="text-center min-w-[45px] max-w-[55px]">
+                    <div className="text-[9px] font-semibold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] whitespace-nowrap overflow-hidden text-ellipsis">
+                        {player.shirtNumber} {player.player.shortName.split(' ').slice(-1)[0]}
+                    </div>
+                    {/* Info Badge */}
+                    {displayValue && (
+                        <div className={`mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow inline-block ${
+                            lineupFilter === 'performance' ? getRatingColor(rating) : 'bg-slate-700'
+                        }`}>
+                            {displayValue}
+                        </div>
+                    )}
+                </div>
+
                 {/* Player Image */}
-                <div className="relative">
+                <div className="relative flex-shrink-0">
                     {imageUrl ? (
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-white border-2 border-white shadow-lg">
                             <img 
@@ -209,29 +233,27 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                             C
                         </div>
                     )}
+                    
+                    {/* Club Icon */}
+                    {showClubIcon && player.teamId && (
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-200">
+                            <img 
+                                src={`https://img.sofascore.com/api/v1/team/${player.teamId}/image`}
+                                alt="Club"
+                                className="w-4 h-4 object-contain"
+                                onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                }}
+                            />
+                        </div>
+                    )}
                 </div>
-
-                {/* Player Name */}
-                <div className="mt-1 text-center">
-                    <div className="text-xs font-semibold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] px-1">
-                        {player.player.shortName.split(' ').slice(-1)[0]}
-                    </div>
-                </div>
-
-                {/* Info Badge */}
-                {displayValue && (
-                    <div className={`mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow ${
-                        lineupFilter === 'performance' ? getRatingColor(rating) : 'bg-slate-700'
-                    }`}>
-                        {displayValue}
-                    </div>
-                )}
             </div>
         );
     };
 
     // Render team formation on field (horizontal layout with absolute positioning)
-    const renderFormationOnField = (team: TeamLineup, teamName: string, teamColor: string, isHome: boolean) => {
+    const renderFormationOnField = (team: TeamLineup, teamName: string, teamColor: string, isHome: boolean, teamId?: number) => {
         const starters = team.players.filter(p => !p.substitute);
         
         // Group by tactical position
@@ -271,7 +293,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
         // Calculate column positions as percentages
         const getColumnPosition = (columnIndex: number) => {
             if (totalColumns === 1) return 50;
-            return 5 + (columnIndex / (totalColumns - 1)) * 90; // 5% padding on edges
+            return 8 + (columnIndex / (totalColumns - 1)) * 84; // 8% padding on edges
         };
 
         return (
@@ -282,18 +304,17 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                     return (
                         <div
                             key={`column-${colIdx}`}
-                            className="absolute flex flex-col justify-center items-center gap-3"
+                            className="absolute flex flex-col justify-around items-center"
                             style={{
                                 left: `${leftPos}%`,
                                 top: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                minHeight: '70%',
-                                maxHeight: '90%'
+                                height: '88%'
                             }}
                         >
-                            {column.map((player, playerIdx) => (
+                            {[...column].reverse().map((player, playerIdx) => (
                                 <div key={`${player.position}-${player.shirtNumber}-${colIdx}-${playerIdx}`}>
-                                    {renderFieldPlayer(player, teamColor, isHome)}
+                                    {renderFieldPlayer(player, teamColor, isHome, teamId)}
                                 </div>
                             ))}
                         </div>
@@ -397,7 +418,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                             <div className="absolute top-2 left-2 text-white font-bold text-xs px-2 py-1 rounded" style={{ backgroundColor: homeTeamColor }}>
                                 {homeTeamName} - {lineups.home.formation}
                             </div>
-                            {renderFormationOnField(lineups.home, homeTeamName, homeTeamColor, true)}
+                            {renderFormationOnField(lineups.home, homeTeamName, homeTeamColor, true, homeTeamId)}
                         </div>
 
                         {/* Away team (right half) */}
@@ -405,7 +426,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                             <div className="absolute top-2 right-2 text-white font-bold text-xs px-2 py-1 rounded" style={{ backgroundColor: awayTeamColor }}>
                                 {awayTeamName} - {lineups.away.formation}
                             </div>
-                            {renderFormationOnField(lineups.away, awayTeamName, awayTeamColor, false)}
+                            {renderFormationOnField(lineups.away, awayTeamName, awayTeamColor, false, awayTeamId)}
                         </div>
                     </div>
                 </div>
