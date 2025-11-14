@@ -28,6 +28,9 @@ interface Player {
         rating?: number;
         minutesPlayed?: number;
         goals?: number;
+        goalAssist?: number;
+        yellowCards?: number;
+        redCards?: number;
         assists?: number;
         totalPass?: number;
         accuratePass?: number;
@@ -245,6 +248,66 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                                     e.currentTarget.style.display = 'none';
                                 }}
                             />
+                        </div>
+                    )}
+                    
+                    {/* Match Events Icons - Only show in Performance mode */}
+                    {lineupFilter === 'performance' && (
+                        <div className="absolute -top-2 -right-2 flex flex-col gap-0.5">
+                            {/* Goals */}
+                            {player.statistics?.goals && player.statistics.goals > 0 && (
+                                <div className="flex items-center gap-0.5">
+                                    {player.statistics.goals <= 3 ? (
+                                        Array.from({ length: player.statistics.goals }).map((_, i) => (
+                                            <div key={`goal-${i}`} className="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-300">
+                                                <svg viewBox="0 0 16 16" className="w-3 h-3">
+                                                    <circle cx="8" cy="8" r="7" fill="none" stroke="black" strokeWidth="0.5"/>
+                                                    <path d="M8 1 L8 15 M1 8 L15 8" stroke="black" strokeWidth="0.5"/>
+                                                    <path d="M3 3 L13 13 M13 3 L3 13" stroke="black" strokeWidth="0.5"/>
+                                                </svg>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-300">
+                                            <svg viewBox="0 0 16 16" className="w-3 h-3">
+                                                <circle cx="8" cy="8" r="7" fill="none" stroke="black" strokeWidth="0.5"/>
+                                                <path d="M8 1 L8 15 M1 8 L15 8" stroke="black" strokeWidth="0.5"/>
+                                                <path d="M3 3 L13 13 M13 3 L3 13" stroke="black" strokeWidth="0.5"/>
+                                            </svg>
+                                        </div>
+                                    )}
+                                    {player.statistics.goals > 3 && (
+                                        <span className="text-white text-[10px] font-bold bg-black/60 rounded px-1">x{player.statistics.goals}</span>
+                                    )}
+                                </div>
+                            )}
+                            {/* Assists */}
+                            {player.statistics?.goalAssist && player.statistics.goalAssist > 0 && (
+                                <div className="flex items-center gap-0.5">
+                                    {player.statistics.goalAssist <= 3 ? (
+                                        Array.from({ length: player.statistics.goalAssist }).map((_, i) => (
+                                            <div key={`assist-${i}`} className="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-300">
+                                                <div className="text-[11px]">👟</div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-300">
+                                            <div className="text-[11px]">👟</div>
+                                        </div>
+                                    )}
+                                    {player.statistics.goalAssist > 3 && (
+                                        <span className="text-white text-[10px] font-bold bg-black/60 rounded px-1">x{player.statistics.goalAssist}</span>
+                                    )}
+                                </div>
+                            )}
+                            {/* Yellow Cards */}
+                            {player.statistics?.yellowCards && player.statistics.yellowCards > 0 && (
+                                <div className="flex gap-0.5">
+                                    {Array.from({ length: Math.min(player.statistics.yellowCards, 2) }).map((_, i) => (
+                                        <div key={`yellow-${i}`} className="w-3 h-4 bg-yellow-400 rounded-sm shadow-md border border-yellow-600"></div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
