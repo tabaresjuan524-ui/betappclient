@@ -99,7 +99,6 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     const [statsCategory, setStatsCategory] = useState<StatsCategory>('general');
     const [sortBy, setSortBy] = useState<string>('rating');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-    debugger;
     if (!lineups || !lineups.home || !lineups.away) {
         return (
             <div className="bg-white dark:bg-slate-800 rounded-lg p-6 text-center text-slate-500 dark:text-slate-400">
@@ -206,9 +205,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                                 alt={player.player.shortName}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                    // Fallback to jersey number circle
-                                    e.currentTarget.style.display = 'none';
-                                    e.currentTarget.parentElement!.style.backgroundColor = teamColor;
+                                    e.currentTarget.src = '/images/sofascore/player-placeholder.svg';
                                 }}
                             />
                         </div>
