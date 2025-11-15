@@ -174,7 +174,7 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     const votesData = detailedData?.[`event/${eventId}/votes`];
     const lineupsData = detailedData?.[`event/${eventId}/lineups`];
     const graphData = detailedData?.[`event/${eventId}/graph`];
-    const standingsData = detailedData?.[`tournament/${eventDetails?.tournament?.uniqueTournament?.id}/season/${eventDetails?.season?.id}/standings/total`];
+    const standingsData = detailedData?.[`tournament/${eventDetails?.tournament?.id}/season/${eventDetails?.season?.id}/standings/total`];
     const pregameFormData = detailedData?.[`event/${eventId}/pregame-form`];
     const boxScoreData = detailedData?.[`event/${eventId}/boxscore`] || detailedData?.[`event/${eventId}/box-score`];
     
@@ -456,14 +456,29 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
                 )}
 
                 {activeTab === 'standings' && (
-                    <div className="p-4">
-                        {standingsData?.standings && standingsData.standings.length > 0 ? (
+                    <div className="p-4 space-y-4">
+                        {pregameFormData && (
+                            <SofascorePrematchStandings
+                                pregameFormData={pregameFormData}
+                                standingsData={standingsData}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamId={eventDetails?.homeTeam?.id}
+                                awayTeamId={eventDetails?.awayTeam?.id}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
+                        )}
+                        
+                        {standingsData?.standings && standingsData.standings.length > 0 && (
                             <SofascoreStandings
                                 standingsData={standingsData}
                                 homeTeamId={eventDetails?.homeTeam?.id}
                                 awayTeamId={eventDetails?.awayTeam?.id}
                             />
-                        ) : (
+                        )}
+
+                        {!pregameFormData && (!standingsData?.standings || standingsData.standings.length === 0) && (
                             <div className="text-center py-8 text-slate-500">
                                 No standings data available
                             </div>
@@ -474,26 +489,13 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
                 {activeTab === 'form' && (
                     <div className="p-4">
                         {pregameFormData ? (
-                            standingsData ? (
-                                <SofascorePrematchStandings
-                                    standingsData={standingsData}
-                                    pregameFormData={pregameFormData}
-                                    homeTeamId={eventDetails?.homeTeam?.id}
-                                    awayTeamId={eventDetails?.awayTeam?.id}
-                                    homeTeamName={homeTeam}
-                                    awayTeamName={awayTeam}
-                                    homeTeamColor={homeTeamColor}
-                                    awayTeamColor={awayTeamColor}
-                                />
-                            ) : (
-                                <SofascoreForm
-                                    pregameFormData={pregameFormData}
-                                    homeTeamName={homeTeam}
-                                    awayTeamName={awayTeam}
-                                    homeTeamColor={homeTeamColor}
-                                    awayTeamColor={awayTeamColor}
-                                />
-                            )
+                            <SofascoreForm
+                                pregameFormData={pregameFormData}
+                                homeTeamName={homeTeam}
+                                awayTeamName={awayTeam}
+                                homeTeamColor={homeTeamColor}
+                                awayTeamColor={awayTeamColor}
+                            />
                         ) : (
                             <div className="text-center py-8 text-slate-500">
                                 No form data available
