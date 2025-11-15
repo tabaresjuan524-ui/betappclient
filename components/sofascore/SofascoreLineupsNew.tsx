@@ -99,7 +99,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     const [statsCategory, setStatsCategory] = useState<StatsCategory>('general');
     const [sortBy, setSortBy] = useState<string>('rating');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-
+    debugger;
     if (!lineups || !lineups.home || !lineups.away) {
         return (
             <div className="bg-white dark:bg-slate-800 rounded-lg p-6 text-center text-slate-500 dark:text-slate-400">
@@ -147,9 +147,9 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
         // Try different market value fields
         const value = player.proposedMarketValue || player.proposedMarketValueRaw?.value;
         const currency = player.proposedMarketValueRaw?.currency || player.marketValueCurrency || 'EUR';
-        
+
         if (!value) return null;
-        
+
         // Format value (convert to millions/thousands)
         if (value >= 1000000) {
             return `${(value / 1000000).toFixed(2)}M €`;
@@ -167,7 +167,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
 
         let displayValue = '';
         let showClubIcon = false;
-        
+
         if (lineupFilter === 'performance' && rating) {
             displayValue = rating.toFixed(1);
         } else if (lineupFilter === 'club') {
@@ -190,9 +190,8 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                     </div>
                     {/* Info Badge */}
                     {displayValue && (
-                        <div className={`mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow inline-block ${
-                            lineupFilter === 'performance' ? getRatingColor(rating) : 'bg-slate-700'
-                        }`}>
+                        <div className={`mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow inline-block ${lineupFilter === 'performance' ? getRatingColor(rating) : 'bg-slate-700'
+                            }`}>
                             {displayValue}
                         </div>
                     )}
@@ -202,8 +201,8 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                 <div className="relative flex-shrink-0">
                     {imageUrl ? (
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-white border-2 border-white shadow-lg">
-                            <img 
-                                src={imageUrl} 
+                            <img
+                                src={imageUrl}
                                 alt={player.player.shortName}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
@@ -214,16 +213,16 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                             />
                         </div>
                     ) : (
-                        <div 
+                        <div
                             className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold border-2 border-white shadow-lg"
                             style={{ backgroundColor: teamColor }}
                         >
                             {player.shirtNumber}
                         </div>
                     )}
-                    
+
                     {/* Jersey Number Badge */}
-                    <div 
+                    <div
                         className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold shadow"
                         style={{ backgroundColor: teamColor }}
                     >
@@ -236,11 +235,11 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                             C
                         </div>
                     )}
-                    
+
                     {/* Club Icon */}
                     {showClubIcon && player.teamId && (
                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-200">
-                            <img 
+                            <img
                                 src={`https://img.sofascore.com/api/v1/team/${player.teamId}/image`}
                                 alt="Club"
                                 className="w-4 h-4 object-contain"
@@ -250,7 +249,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                             />
                         </div>
                     )}
-                    
+
                     {/* Match Events Icons - Only show in Performance mode */}
                     {lineupFilter === 'performance' && (
                         <div className="absolute -top-2 -right-2 flex flex-col gap-0.5">
@@ -261,18 +260,18 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                                         Array.from({ length: player.statistics.goals }).map((_, i) => (
                                             <div key={`goal-${i}`} className="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-300">
                                                 <svg viewBox="0 0 16 16" className="w-3 h-3">
-                                                    <circle cx="8" cy="8" r="7" fill="none" stroke="black" strokeWidth="0.5"/>
-                                                    <path d="M8 1 L8 15 M1 8 L15 8" stroke="black" strokeWidth="0.5"/>
-                                                    <path d="M3 3 L13 13 M13 3 L3 13" stroke="black" strokeWidth="0.5"/>
+                                                    <circle cx="8" cy="8" r="7" fill="none" stroke="black" strokeWidth="0.5" />
+                                                    <path d="M8 1 L8 15 M1 8 L15 8" stroke="black" strokeWidth="0.5" />
+                                                    <path d="M3 3 L13 13 M13 3 L3 13" stroke="black" strokeWidth="0.5" />
                                                 </svg>
                                             </div>
                                         ))
                                     ) : (
                                         <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-300">
                                             <svg viewBox="0 0 16 16" className="w-3 h-3">
-                                                <circle cx="8" cy="8" r="7" fill="none" stroke="black" strokeWidth="0.5"/>
-                                                <path d="M8 1 L8 15 M1 8 L15 8" stroke="black" strokeWidth="0.5"/>
-                                                <path d="M3 3 L13 13 M13 3 L3 13" stroke="black" strokeWidth="0.5"/>
+                                                <circle cx="8" cy="8" r="7" fill="none" stroke="black" strokeWidth="0.5" />
+                                                <path d="M8 1 L8 15 M1 8 L15 8" stroke="black" strokeWidth="0.5" />
+                                                <path d="M3 3 L13 13 M13 3 L3 13" stroke="black" strokeWidth="0.5" />
                                             </svg>
                                         </div>
                                     )}
@@ -318,7 +317,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     // Render team formation on field (horizontal layout with absolute positioning)
     const renderFormationOnField = (team: TeamLineup, teamName: string, teamColor: string, isHome: boolean, teamId?: number) => {
         const starters = team.players.filter(p => !p.substitute);
-        
+
         // Group by tactical position
         const goalkeepers = starters.filter(p => p.position === 'G');
         const defenders = starters.filter(p => p.position === 'D');
@@ -327,19 +326,19 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
 
         // Parse formation (e.g., "3-5-2" = 3 columns with 3,5,2 players each)
         const formationParts = team.formation.split('-').map(Number);
-        
+
         // Build columns array - each formation number is a column with that many players
         const columns: Player[][] = [];
-        
+
         // Goalkeeper column (separate from formation)
         if (goalkeepers.length > 0) {
             columns.push(goalkeepers);
         }
-        
+
         // Collect all outfield players in order: defenders, midfielders, forwards
         const outfieldPlayers = [...defenders, ...midfielders, ...forwards];
         let playerIndex = 0;
-        
+
         // Create columns based on formation numbers
         // For "3-5-2": column with 3 players, column with 5 players, column with 2 players
         formationParts.forEach(count => {
@@ -349,10 +348,10 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
             }
             playerIndex += count;
         });
-        
+
         // Total columns for field width distribution (GK + formation columns)
         const totalColumns = columns.length;
-        
+
         // Calculate column positions as percentages
         const getColumnPosition = (columnIndex: number) => {
             if (totalColumns === 1) return 50;
@@ -363,7 +362,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
             <div className="relative w-full h-full">
                 {columns.map((column, colIdx) => {
                     const leftPos = isHome ? getColumnPosition(colIdx) : 100 - getColumnPosition(colIdx);
-                    
+
                     return (
                         <div
                             key={`column-${colIdx}`}
@@ -395,55 +394,50 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                 <div className="flex gap-2 overflow-x-auto pb-2">
                     <button
                         onClick={() => setLineupFilter('performance')}
-                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                            lineupFilter === 'performance'
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${lineupFilter === 'performance'
                                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                                 : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                        }`}
+                            }`}
                     >
                         <TrendingUp size={14} />
                         Performance
                     </button>
                     <button
                         onClick={() => setLineupFilter('club')}
-                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                            lineupFilter === 'club'
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${lineupFilter === 'club'
                                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                                 : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                        }`}
+                            }`}
                     >
                         <Shield size={14} />
                         Club
                     </button>
                     <button
                         onClick={() => setLineupFilter('age')}
-                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                            lineupFilter === 'age'
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${lineupFilter === 'age'
                                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                                 : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                        }`}
+                            }`}
                     >
                         <Calendar size={14} />
                         Age
                     </button>
                     <button
                         onClick={() => setLineupFilter('market-value')}
-                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                            lineupFilter === 'market-value'
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${lineupFilter === 'market-value'
                                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                                 : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                        }`}
+                            }`}
                     >
                         <DollarSign size={14} />
                         Market value
                     </button>
                     <button
                         onClick={() => setLineupFilter('height')}
-                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                            lineupFilter === 'height'
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${lineupFilter === 'height'
                                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                                 : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                        }`}
+                            }`}
                     >
                         <Ruler size={14} />
                         Height
@@ -451,7 +445,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                 </div>
 
                 {/* Soccer Field - Horizontal */}
-                <div className="relative rounded-lg overflow-hidden" style={{ 
+                <div className="relative rounded-lg overflow-hidden" style={{
                     background: 'linear-gradient(90deg, #2d5016 0%, #3a6b1e 25%, #3a6b1e 75%, #2d5016 100%)',
                     height: '500px',
                     maxHeight: '500px'
@@ -460,15 +454,15 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                     <div className="absolute inset-0">
                         {/* Center line (vertical) */}
                         <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30" />
-                        
+
                         {/* Center circle */}
                         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-white/30" />
                         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white/30" />
-                        
+
                         {/* Penalty boxes */}
                         <div className="absolute top-1/4 bottom-1/4 left-0 w-16 border-2 border-l-0 border-white/30" />
                         <div className="absolute top-1/4 bottom-1/4 right-0 w-16 border-2 border-r-0 border-white/30" />
-                        
+
                         {/* Goal boxes */}
                         <div className="absolute top-1/3 bottom-1/3 left-0 w-8 border-2 border-l-0 border-white/30" />
                         <div className="absolute top-1/3 bottom-1/3 right-0 w-8 border-2 border-r-0 border-white/30" />
@@ -515,7 +509,7 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
     // Render player stats tables
     const renderPlayerStatsView = () => {
         const allPlayers = [...lineups.home.players, ...lineups.away.players].filter(p => !p.substitute);
-        
+
         const sortPlayers = (players: Player[]) => {
             return [...players].sort((a, b) => {
                 let aVal: any = 0;
@@ -629,13 +623,13 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                                 const rating = stats?.rating;
                                 const isHomePlayer = lineups.home.players.some(p => p.shirtNumber === player.shirtNumber && p.player.name === player.player.name);
                                 const uniqueKey = `${isHomePlayer ? 'home' : 'away'}-${player.shirtNumber}-${player.player.name.replace(/\s+/g, '-')}`;
-                                
+
                                 return (
                                     <tr key={uniqueKey} className={`border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 ${getRatingBgColor(rating)}`}>
                                         <td className="p-2">
                                             <div className="flex items-center gap-2">
                                                 {player.player.country?.alpha2 && (
-                                                    <img 
+                                                    <img
                                                         src={`https://flagcdn.com/w20/${player.player.country.alpha2.toLowerCase()}.png`}
                                                         alt=""
                                                         className="w-5 h-3"
@@ -648,22 +642,22 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                                         <td className="text-center p-2">{stats?.assists || 0}</td>
                                         <td className="text-center p-2">{stats?.tacklesWon || 0}</td>
                                         <td className="text-center p-2">
-                                            {stats?.accuratePass && stats?.totalPass 
+                                            {stats?.accuratePass && stats?.totalPass
                                                 ? `${stats.accuratePass}/${stats.totalPass} (${stats.accuratePassPercentage}%)`
                                                 : '-'}
                                         </td>
                                         <td className="text-center p-2">
-                                            {stats?.totalDuels 
+                                            {stats?.totalDuels
                                                 ? `${((stats.groundDuelsWon || 0) + (stats.aerialDuelsWon || 0))} (${stats.totalDuels})`
                                                 : '-'}
                                         </td>
                                         <td className="text-center p-2">
-                                            {stats?.groundDuelsWon 
+                                            {stats?.groundDuelsWon
                                                 ? `${stats.groundDuelsWon}`
                                                 : '-'}
                                         </td>
                                         <td className="text-center p-2">
-                                            {stats?.aerialDuelsWon 
+                                            {stats?.aerialDuelsWon
                                                 ? `${stats.aerialDuelsWon}`
                                                 : '-'}
                                         </td>
@@ -701,21 +695,19 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
             <div className="flex gap-2 p-4 border-b dark:border-slate-700">
                 <button
                     onClick={() => setViewMode('lineups')}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                        viewMode === 'lineups'
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${viewMode === 'lineups'
                             ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                             : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                    }`}
+                        }`}
                 >
                     Lineups
                 </button>
                 <button
                     onClick={() => setViewMode('player-stats')}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                        viewMode === 'player-stats'
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${viewMode === 'player-stats'
                             ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                             : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                    }`}
+                        }`}
                 >
                     Player stats
                 </button>
@@ -728,11 +720,10 @@ const SofascoreLineups: React.FC<SofascoreLineupsProps> = ({
                         <button
                             key={category}
                             onClick={() => setStatsCategory(category)}
-                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-                                statsCategory === category
+                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${statsCategory === category
                                     ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                                     : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                            }`}
+                                }`}
                         >
                             {category.charAt(0).toUpperCase() + category.slice(1)}
                         </button>
