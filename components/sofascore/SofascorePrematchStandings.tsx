@@ -1,290 +1,261 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
-interface FormItem {
-    result: 'W' | 'L' | 'D';
-    teamId?: number;
+// --- TYPE DEFINITIONS ---
+
+interface Team {
+  id: number;
+  name: string;
 }
 
-interface TeamForm {
-    teamId: number;
-    teamName: string;
-    position: number;
-    points: number;
-    matches: number;
-    wins: number;
-    draws: number;
-    losses: number;
-    form: FormItem[]; // Last 5 matches
+interface StandingRow {
+  team: Team;
+  position: number;
+  matches: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  points: number;
+  scoresFor: number;
+  scoresAgainst: number;
+  scoreDiff: number;
+  scoreDiffFormatted: string;
+  form?: string;
 }
 
-interface PregameFormData {
-    homeTeam?: {
-        position?: number;
-        value?: string;
-        id?: number;
-    };
-    awayTeam?: {
-        position?: number;
-        value?: string;
-        id?: number;
-    };
+interface Standing {
+  id: number;
+  name: string;
+  type: 'total' | 'home' | 'away';
+  rows: StandingRow[];
+}
+
+interface StandingsData {
+  standings: Standing[];
 }
 
 interface SofascorePrematchStandingsProps {
-    pregameFormData?: PregameFormData;
-    standingsData?: any; // Full standings to get additional info
-    homeTeamName: string;
-    awayTeamName: string;
-    homeTeamId: number;
-    awayTeamId: number;
-    homeTeamColor?: string;
-    awayTeamColor?: string;
+  standingsData?: StandingsData;
+  homeTeamId: number;
+  awayTeamId: number;
 }
 
-const SofascorePrematchStandings: React.FC<SofascorePrematchStandingsProps> = ({
-    pregameFormData,
-    standingsData,
-    homeTeamName,
-    awayTeamName,
-    homeTeamId,
-    awayTeamId,
-    homeTeamColor = '#3b82f6',
-    awayTeamColor = '#ef4444',
-}) => {
-    // Extract team data from standings
-    const getTeamFromStandings = (teamId: number) => {
-        if (!standingsData?.standings?.[0]?.rows) return null;
-        return standingsData.standings[0].rows.find((row: any) => row.team.id === teamId);
-    };
+type TableView = 'total' | 'home' | 'away';
+type ViewMode = 'short' | 'full' | 'form';
 
-    const homeTeamData = getTeamFromStandings(homeTeamId);
-    const awayTeamData = getTeamFromStandings(awayTeamId);
+// --- HELPER COMPONENTS ---
 
-    if (!homeTeamData && !awayTeamData) {
+const FormIndicator = ({ formString }: { formString: string }) => {
+  const formItems = formString.split('').slice(0, 5);
+
+  return (
+    <div className="flex justify-end gap-1">
+      {formItems.map((result, index) => {
+        const bgColor =
+          result === 'W'
+            ? 'bg-green-600'
+            : result === 'D'
+            ? 'bg-yellow-500'
+            : 'bg-red-600';
         return (
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 text-center text-slate-500 dark:text-slate-400">
-                <p>No form data available</p>
-            </div>
+          <div
+            key={index}
+            className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white`}
+            title={result === 'W' ? 'Win' : result === 'D' ? 'Draw' : 'Loss'}
+          >
+            {result}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// --- MAIN COMPONENT ---
+
+const SofascorePrematchStandings: React.FC<SofascorePrematchStandingsProps> = ({
+  standingsData,
+  homeTeamId,
+  awayTeamId,
+}) => {
+  const [tableView, setTableView] = useState<TableView>('total');
+  const [viewMode, setViewMode] = useState<ViewMode>('short');
+
+  const activeStanding = standingsData?.standings?.find(
+    (s) => s.type === tableView
+  );
+
+  if (!standingsData || !standingsData.standings || !activeStanding) {
+    return (
+      <div className="rounded-lg bg-white p-4 text-center text-gray-500 dark:bg-gray-800">
+        No standings data available.
+      </div>
+    );
+  }
+
+  const viewModeLabels: Record<ViewMode, string> = {
+    short: 'Short',
+    full: 'Full',
+    form: 'Form',
+  };
+
+  const renderTableHeader = () => {
+    switch (viewMode) {
+      case 'full':
+        return (
+          <>
+            <TableHead className="w-12 text-center">P</TableHead>
+            <TableHead className="w-12 text-center">W</TableHead>
+            <TableHead className="w-12 text-center">D</TableHead>
+            <TableHead className="w-12 text-center">L</TableHead>
+            <TableHead className="hidden w-20 text-center md:table-cell">Goals</TableHead>
+            <TableHead className="w-16 text-center">+/-</TableHead>
+            <TableHead className="w-16 text-center">PTS</TableHead>
+          </>
+        );
+      case 'form':
+        return <TableHead className="text-right">Last 5</TableHead>;
+      case 'short':
+      default:
+        return (
+          <>
+            <TableHead className="w-16 text-center">P</TableHead>
+            <TableHead className="w-16 text-center">+/-</TableHead>
+            <TableHead className="w-16 text-center">PTS</TableHead>
+          </>
         );
     }
+  };
 
-    // Parse form from pregameFormData value (e.g., "WWDLW")
-    const parseForm = (formString?: string): FormItem[] => {
-        if (!formString) return [];
-        return formString.split('').slice(0, 5).map(char => ({
-            result: char as 'W' | 'L' | 'D'
-        }));
-    };
-
-    const homeForm = pregameFormData?.homeTeam?.value 
-        ? parseForm(pregameFormData.homeTeam.value) 
-        : [];
-    
-    const awayForm = pregameFormData?.awayTeam?.value 
-        ? parseForm(pregameFormData.awayTeam.value) 
-        : [];
-
-    const FormIndicator = ({ form }: { form: FormItem[] }) => {
+  const renderTableRow = (row: StandingRow) => {
+    switch (viewMode) {
+      case 'full':
         return (
-            <div className="flex gap-1">
-                {form.map((item, index) => {
-                    const bgColor = item.result === 'W' 
-                        ? 'bg-green-500' 
-                        : item.result === 'D' 
-                        ? 'bg-yellow-500' 
-                        : 'bg-red-500';
-                    
-                    return (
-                        <div 
-                            key={index}
-                            className={`${bgColor} w-6 h-6 rounded flex items-center justify-center text-white text-xs font-bold`}
-                        >
-                            {item.result}
-                        </div>
-                    );
-                })}
-            </div>
+          <>
+            <TableCell className="text-center font-medium">{row.matches}</TableCell>
+            <TableCell className="text-center ">{row.wins}</TableCell>
+            <TableCell className="text-center ">{row.draws}</TableCell>
+            <TableCell className="text-center ">{row.losses}</TableCell>
+            <TableCell className="hidden text-center md:table-cell">{`${row.scoresFor}:${row.scoresAgainst}`}</TableCell>
+            <TableCell className="text-center">{row.scoreDiffFormatted}</TableCell>
+            <TableCell className="text-center font-bold">{row.points}</TableCell>
+          </>
         );
-    };
-
-    const TeamCard = ({ 
-        teamData, 
-        teamName, 
-        teamColor, 
-        form, 
-        position 
-    }: { 
-        teamData: any; 
-        teamName: string; 
-        teamColor: string; 
-        form: FormItem[];
-        position?: number;
-    }) => {
-        if (!teamData) {
-            return (
-                <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">No data</p>
-                </div>
-            );
-        }
-
+      case 'form':
         return (
-            <div className="bg-white dark:bg-slate-700 rounded-lg p-4 border-2 border-slate-200 dark:border-slate-600">
-                {/* Team Header */}
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                        <div 
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: teamColor }}
-                        />
-                        <h4 className="font-bold text-slate-800 dark:text-slate-100">
-                            {teamName}
-                        </h4>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Position</p>
-                        <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-                            {position || teamData.position}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-4 gap-2 mb-3 text-center">
-                    <div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">P</p>
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                            {teamData.matches}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">W</p>
-                        <p className="text-sm font-semibold text-green-600 dark:text-green-400">
-                            {teamData.wins}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">D</p>
-                        <p className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
-                            {teamData.draws}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">L</p>
-                        <p className="text-sm font-semibold text-red-600 dark:text-red-400">
-                            {teamData.losses}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Points */}
-                <div className="mb-3 p-2 bg-slate-100 dark:bg-slate-600 rounded text-center">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Points</p>
-                    <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
-                        {teamData.points}
-                    </p>
-                </div>
-
-                {/* Form */}
-                <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Last 5 matches</p>
-                    {form.length > 0 ? (
-                        <FormIndicator form={form} />
-                    ) : (
-                        <p className="text-xs text-slate-400">No form data</p>
-                    )}
-                </div>
-
-                {/* Goal Difference */}
-                <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                    <div className="flex justify-between text-xs">
-                        <span className="text-slate-500 dark:text-slate-400">Goals</span>
-                        <span className="font-semibold text-slate-800 dark:text-slate-100">
-                            {teamData.scoresFor} - {teamData.scoresAgainst}
-                        </span>
-                    </div>
-                    <div className="flex justify-between text-xs mt-1">
-                        <span className="text-slate-500 dark:text-slate-400">Goal Difference</span>
-                        <span className={`font-bold ${
-                            teamData.scoreDiffFormatted.startsWith('+') 
-                                ? 'text-green-600 dark:text-green-400' 
-                                : teamData.scoreDiffFormatted.startsWith('-')
-                                ? 'text-red-600 dark:text-red-400'
-                                : 'text-slate-600 dark:text-slate-400'
-                        }`}>
-                            {teamData.scoreDiffFormatted}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
-    return (
-        <div className="bg-white dark:bg-slate-800 rounded-lg p-6">
-            {/* Header */}
-            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 text-center">
-                Current Form & Standing
-            </h3>
-
-            {/* Team Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TeamCard 
-                    teamData={homeTeamData}
-                    teamName={homeTeamName}
-                    teamColor={homeTeamColor}
-                    form={homeForm}
-                    position={pregameFormData?.homeTeam?.position}
-                />
-                
-                <TeamCard 
-                    teamData={awayTeamData}
-                    teamName={awayTeamName}
-                    teamColor={awayTeamColor}
-                    form={awayForm}
-                    position={pregameFormData?.awayTeam?.position}
-                />
-            </div>
-
-            {/* Comparison */}
-            {homeTeamData && awayTeamData && (
-                <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-                    <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 text-center">
-                        Quick Comparison
-                    </h4>
-                    <div className="grid grid-cols-3 gap-4 text-center text-xs">
-                        <div>
-                            <p className="font-bold text-lg" style={{ color: homeTeamColor }}>
-                                {homeTeamData.points}
-                            </p>
-                            <p className="text-slate-500 dark:text-slate-400">Points</p>
-                            <p className="font-bold text-lg" style={{ color: awayTeamColor }}>
-                                {awayTeamData.points}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="font-bold text-lg" style={{ color: homeTeamColor }}>
-                                {homeTeamData.position}
-                            </p>
-                            <p className="text-slate-500 dark:text-slate-400">Position</p>
-                            <p className="font-bold text-lg" style={{ color: awayTeamColor }}>
-                                {awayTeamData.position}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="font-bold text-lg" style={{ color: homeTeamColor }}>
-                                {homeTeamData.wins}
-                            </p>
-                            <p className="text-slate-500 dark:text-slate-400">Wins</p>
-                            <p className="font-bold text-lg" style={{ color: awayTeamColor }}>
-                                {awayTeamData.wins}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+          <TableCell>
+            {row.form ? (
+              <FormIndicator formString={row.form} />
+            ) : (
+              <span className="text-xs text-gray-400">N/A</span>
             )}
+          </TableCell>
+        );
+      case 'short':
+      default:
+        return (
+          <>
+            <TableCell className="text-center font-medium">{row.matches}</TableCell>
+            <TableCell className="text-center">{row.scoreDiffFormatted}</TableCell>
+            <TableCell className="text-center font-bold">{row.points}</TableCell>
+          </>
+        );
+    }
+  };
+
+  return (
+    <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-900">
+      <div className="mb-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
+        {/* View Mode: Short, Full, Form */}
+        <div className="flex justify-center gap-1 rounded-md bg-slate-100 p-1 dark:bg-slate-800">
+          {(['short', 'full', 'form'] as ViewMode[]).map((mode) => (
+            <Button
+              key={mode}
+              variant="ghost"
+              size="sm"
+              className={`h-8 text-xs capitalize ${
+                viewMode === mode
+                  ? 'bg-sky-500 text-white hover:bg-sky-600'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
+              onClick={() => setViewMode(mode)}
+            >
+              {viewModeLabels[mode]}
+            </Button>
+          ))}
         </div>
-    );
+
+        {/* Table View: All, Home, Away */}
+        <div className="flex justify-center gap-1 rounded-md bg-slate-100 p-1 dark:bg-slate-800">
+          {(['total', 'home', 'away'] as TableView[]).map((view) => (
+            <Button
+              key={view}
+              variant="ghost"
+              size="sm"
+              className={`h-8 text-xs capitalize ${
+                tableView === view
+                  ? 'bg-sky-500 text-white hover:bg-sky-600'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
+              onClick={() => setTableView(view)}
+            >
+              {view === 'total' ? 'All' : view}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <Table className="min-w-full table-fixed">
+          <TableHeader>
+            <TableRow className="bg-slate-50 dark:bg-slate-800">
+              <TableHead className="w-10 text-center">#</TableHead>
+              <TableHead className="w-64">Team</TableHead>
+              {renderTableHeader()}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {activeStanding.rows.map((row) => {
+              const isHighlighted = row.team.id === homeTeamId || row.team.id === awayTeamId;
+
+              return (
+                <TableRow
+                  key={row.team.id}
+                  className={
+                    isHighlighted ? 'bg-sky-50 dark:bg-sky-900/50' : ''
+                  }
+                >
+                  <TableCell className="text-center font-bold text-slate-500 dark:text-slate-400">
+                    {row.position}
+                  </TableCell>
+                  <TableCell className="flex items-center gap-3">
+                    <img
+                      src={`https://api.sofascore.com/api/v1/team/${row.team.id}/image`}
+                      alt={`${row.team.name} logo`}
+                      width={24}
+                      height={24}
+                      className="inline-block"
+                      onError={(e) => (e.currentTarget.style.display = 'none')}
+                    />
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">{row.team.name}</span>
+                  </TableCell>
+                  {renderTableRow(row)}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
 };
 
 export default SofascorePrematchStandings;

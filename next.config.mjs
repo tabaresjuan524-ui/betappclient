@@ -14,6 +14,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'api.sofascore.com',
+        pathname: '/api/v1/team/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'juandata.github.io',
         pathname: '/publicAssets/images/**',
       },
