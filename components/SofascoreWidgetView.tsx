@@ -128,15 +128,22 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     
     // Merge h2hBasic stats with h2hEvents data
     let h2hData = null;
-    if (h2hEvents?.events) {
-        // If we have the events endpoint data, use it and merge with basic stats
-        h2hData = {
-            ...h2hBasic,
-            ...h2hEvents
-        };
-    } else if (h2hBasic?.events) {
-        // Fallback: if basic endpoint has events, use it
-        h2hData = h2hBasic;
+
+    // Start with h2hBasic if it has the core duel stats
+    if (h2hBasic && h2hBasic.teamDuel) {
+        h2hData = { ...h2hBasic };
+    }
+
+    // If we have event history, merge it in.
+    // Also, if h2hData is still null but we have events, initialize it.
+    if (h2hEvents && h2hEvents.events) {
+        if (h2hData) {
+            // Merge with existing data
+            h2hData = { ...h2hData, ...h2hEvents };
+        } else {
+            // Initialize with just the events
+            h2hData = { ...h2hEvents };
+        }
     }
     
     // Get team events data for H2H matches section

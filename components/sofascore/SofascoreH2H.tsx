@@ -43,6 +43,11 @@ interface TeamEventsData {
 
 interface H2HData {
     events?: H2HEvent[];
+    teamDuel?: {
+        homeWins: number;
+        awayWins: number;
+        draws: number;
+    };
 }
 
 interface SofascoreH2HProps {
@@ -318,6 +323,40 @@ const SofascoreH2H: React.FC<SofascoreH2HProps> = ({
             <div className="p-4">
                 {activeTab === 'h2h' && (
                     <div>
+                        {h2hData?.teamDuel && (() => {
+                            const { homeWins, awayWins, draws } = h2hData.teamDuel;
+                            const totalMatches = homeWins + awayWins + draws;
+                            const homeWinPercentage = totalMatches > 0 ? (homeWins / totalMatches) * 100 : 0;
+                            const drawPercentage = totalMatches > 0 ? (draws / totalMatches) * 100 : 0;
+                            const awayWinPercentage = totalMatches > 0 ? (awayWins / totalMatches) * 100 : 0;
+
+                            return (
+                                <div className="mb-6">
+                                    <div className="grid grid-cols-3 gap-4 items-center mb-3 text-center">
+                                        <div className="flex flex-col items-center space-y-1">
+                                            <p className="font-bold text-3xl" style={{ color: homeTeamColor }}>{homeWins}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">Wins</p>
+                                        </div>
+                                        <div className="flex flex-col items-center space-y-1">
+                                            <p className="font-bold text-3xl text-slate-600 dark:text-slate-300">{draws}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">Draws</p>
+                                        </div>
+                                        <div className="flex flex-col items-center space-y-1">
+                                            <p className="font-bold text-3xl" style={{ color: awayTeamColor }}>{awayWins}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">Wins</p>
+                                        </div>
+                                    </div>
+                                    <div className="w-full flex h-2 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">
+                                        <div style={{ width: `${homeWinPercentage}%`, backgroundColor: homeTeamColor }} />
+                                        <div style={{ width: `${drawPercentage}%` }} className="bg-slate-400 dark:bg-slate-500" />
+                                        <div style={{ width: `${awayWinPercentage}%`, backgroundColor: awayTeamColor }} />
+                                    </div>
+                                    {totalMatches > 0 && <p className="text-center text-xs text-slate-500 mt-2">Based on last {totalMatches} matches.</p>}
+                                </div>
+                            );
+                        })()}
+
+                        <h4 className="text-sm font-semibold mb-2 text-slate-600 dark:text-slate-300">Matches</h4>
                         {h2hEvents.length === 0 ? (
                             <p className="text-center text-slate-500 dark:text-slate-400 py-8">
                                 No head-to-head matches found

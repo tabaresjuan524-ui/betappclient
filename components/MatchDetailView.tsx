@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import LiveMatchHeader from './LiveMatchHeader';
 import SofascoreWidgetView from './SofascoreWidgetView';
+import H2HDisplay from './H2HDisplay';
 
 interface MatchDetailViewProps {
     matchData: LiveEvent;
@@ -313,6 +314,26 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
         return false;
     }, [sofascoreData, matchData.id, matchData.api_name, sofascoreWidgetsEnabled]);
 
+    const h2hData = useMemo(() => {
+        if (!sofascoreData || !sofascoreData.sports || matchData.api_name !== 'sofascore') {
+            return null;
+        }
+
+        const eventId = matchData.id.toString();
+        for (const sportData of Object.values(sofascoreData.sports) as any[]) {
+            if (sportData?.events?.[eventId]) {
+                const eventDetails = sportData.events[eventId];
+                const h2h = eventDetails[`event/${eventId}/h2h`];
+                // Ensure teamDuel exists to prevent rendering empty state
+                if (h2h && h2h.teamDuel) { 
+                    return h2h;
+                }
+            }
+        }
+
+        return null;
+    }, [sofascoreData, matchData.id, matchData.api_name]);
+
     useEffect(() => {
         // Only update markets if we don't have stable category data yet
         if (matchData?.markets && !isDataStable) {
@@ -363,6 +384,26 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
             setIsFetching(false);
         }
     }, [liveEvents])
+
+    // Effect to set the initial category, prioritizing H2H
+    useEffect(() => {
+        if (!hasInitializedCategoryRef.current && !hasUserSelectedTabRef.current && !selectedCategory) {
+            if (h2hData) {
+                setSelectedCategory('h2h');
+                hasInitializedCategoryRef.current = true;
+            } else if (categories.length > 0) {
+                const firstCategoryId = categories[0].CategoryId;
+                setSelectedCategory(firstCategoryId);
+                hasInitializedCategoryRef.current = true;
+                // Automatically load markets for the default selected category if it's codere
+                if (matchData.api_name === 'codere') {
+                    setLoadingCategories(prev => new Set(Array.from(prev).concat(firstCategoryId)));
+                    setCategoryLoadAttempts(prev => ({ ...prev, [firstCategoryId]: 1 }));
+                    getCategoryMarkets(matchData.id.toString(), firstCategoryId);
+                }
+            }
+        }
+    }, [h2hData, categories, selectedCategory, matchData.api_name, matchData.id]);
     
     // Listen for category data when match is watched
     useEffect(() => {
@@ -389,32 +430,6 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
                 setCategories(relevantCategories);
                 
                 // Set first category as selected by default ONLY if we haven't initialized yet AND no category is selected AND user hasn't selected
-                if (relevantCategories.length > 0 && 
-                    !hasInitializedCategoryRef.current && 
-                    !hasUserSelectedTabRef.current && 
-                    !selectedCategory) {
-                    
-                    const firstCategoryId = relevantCategories[0].CategoryId;
-                    
-                    
-                    // Ensure we set both the category and load its content immediately
-                    setSelectedCategory(firstCategoryId);
-                    hasInitializedCategoryRef.current = true;
-                    
-                    // Automatically load markets for the default selected category
-                    if (matchData.api_name === 'codere') {
-                        
-                        setLoadingCategories(prev => new Set(Array.from(prev).concat(firstCategoryId)));
-                        // Track load attempts for auto-load
-                        setCategoryLoadAttempts(prev => ({
-                            ...prev,
-                            [firstCategoryId]: 1
-                        }));
-                        getCategoryMarkets(matchData.id.toString(), firstCategoryId);
-                    }
-                } else {
-                    
-                }
                 
                 setIsDataStable(true); // Mark data as stable to prevent overwrites
                 
@@ -770,6 +785,20 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
                         {/* Tab Headers */}
                         <div className="border-b dark:border-zinc-700 bg-white dark:bg-zinc-900">
                             <div ref={tabsContainerRef} className="flex overflow-x-auto scrollbar-hide relative">
+                                {h2hData && (
+                                    <button 
+                                        key="h2h-tab"
+                                        data-category-id="h2h"
+                                        onClick={() => changeCategory('h2h')}
+                                        className={`flex-shrink-0 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap relative ${
+                                            selectedCategory === 'h2h'
+                                                ? 'text-yellow-500 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-yellow-500 after:rounded-t-sm'
+                                                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:h-0.5 hover:after:bg-yellow-500/50 hover:after:rounded-t-sm'
+                                        }`}
+                                    >
+                                        H2H
+                                    </button>
+                                )}
                                 {categories.map((category) => (
                                     <button 
                                         key={category.CategoryId}
@@ -794,6 +823,10 @@ const MatchDetailView = React.memo(({ matchData, onBack, onAddBet, selectedBets 
                         <div className="flex-1 mt-4 overflow-y-scroll scrollbar-thin min-h-0">
                             <div className="space-y-2 md:grid md:grid-cols-2 md:gap-2 md:space-y-0 p-2.5 pb-32">
                                 {(() => {
+                                    if (selectedCategory === 'h2h') {
+                                        return <H2HDisplay data={h2hData} homeTeamName={matchData.home_team} awayTeamName={matchData.away_team} />;
+                                    }
+
                                     const marketsForCategory = getMarketsForCategory(selectedCategory);
                                     
                                     
