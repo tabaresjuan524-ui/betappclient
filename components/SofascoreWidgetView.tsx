@@ -37,18 +37,6 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     const eventId = matchId.toString();
     const sportNameLower = sportName.toLowerCase();
     const sportData = sofascoreData?.sports?.[sportNameLower] || sofascoreData?.sports?.[sportName];
-    
-    // Debug logging
-    console.log('🔍 SofascoreWidgetView Debug:', {
-        matchId,
-        eventId,
-        sportName,
-        sportNameLower,
-        availableSports: sofascoreData?.sports ? Object.keys(sofascoreData.sports) : [],
-        sportData: sportData ? 'found' : 'not found',
-        events: sportData?.events ? Object.keys(sportData.events) : []
-    });
-    
     const liveEvent = sportData?.liveEvents?.events?.find((e: any) => e.id === matchId) 
         || sportData?.liveEvents?.find((e: any) => e.id === matchId);
     const detailedData = sportData?.events?.[eventId];
@@ -174,7 +162,24 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
     const votesData = detailedData?.[`event/${eventId}/votes`];
     const lineupsData = detailedData?.[`event/${eventId}/lineups`];
     const graphData = detailedData?.[`event/${eventId}/graph`];
-    const standingsData = detailedData?.[`tournament/${eventDetails?.tournament?.id}/season/${eventDetails?.season?.id}/standings/total`];
+    const standingsTotal = detailedData?.[`tournament/${eventDetails?.tournament?.id}/season/${eventDetails?.season?.id}/standings/total`];
+    const standingsHome = detailedData?.[`tournament/${eventDetails?.tournament?.id}/season/${eventDetails?.season?.id}/standings/home`];
+    const standingsAway = detailedData?.[`tournament/${eventDetails?.tournament?.id}/season/${eventDetails?.season?.id}/standings/away`];
+
+    const allStandings = [];
+    if (standingsTotal?.standings) {
+        allStandings.push(...standingsTotal.standings);
+    }
+    if (standingsHome?.standings) {
+        allStandings.push(...standingsHome.standings);
+    }
+    if (standingsAway?.standings) {
+        allStandings.push(...standingsAway.standings);
+    }
+    
+    const standingsData = allStandings.length > 0 
+        ? { standings: allStandings.filter(s => s.type === 'total' || s.type === 'home' || s.type === 'away') }
+        : undefined;
     const pregameFormData = detailedData?.[`event/${eventId}/pregame-form`];
     const boxScoreData = detailedData?.[`event/${eventId}/boxscore`] || detailedData?.[`event/${eventId}/box-score`];
     
@@ -457,7 +462,7 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
 
                 {activeTab === 'standings' && (
                     <div className="p-4 space-y-4">
-                        {pregameFormData && (
+                        {pregameFormData ? (
                             <SofascorePrematchStandings
                                 pregameFormData={pregameFormData}
                                 standingsData={standingsData}
@@ -468,17 +473,13 @@ const SofascoreWidgetView: React.FC<SofascoreWidgetViewProps> = ({ matchId, spor
                                 homeTeamColor={homeTeamColor}
                                 awayTeamColor={awayTeamColor}
                             />
-                        )}
-                        
-                        {standingsData?.standings && standingsData.standings.length > 0 && (
+                        ) : standingsData?.standings && standingsData.standings.length > 0 ? (
                             <SofascoreStandings
                                 standingsData={standingsData}
                                 homeTeamId={eventDetails?.homeTeam?.id}
                                 awayTeamId={eventDetails?.awayTeam?.id}
                             />
-                        )}
-
-                        {!pregameFormData && (!standingsData?.standings || standingsData.standings.length === 0) && (
+                        ) : (
                             <div className="text-center py-8 text-slate-500">
                                 No standings data available
                             </div>

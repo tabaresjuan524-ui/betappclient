@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -8,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { RootState } from '@/store'; // Assuming you have a RootState type defined
 
 // --- TYPE DEFINITIONS ---
 
@@ -28,7 +30,8 @@ interface StandingRow {
   scoresAgainst: number;
   scoreDiff: number;
   scoreDiffFormatted: string;
-  form?: string;
+  form?: string; // This will now be derived from recentMatches
+  recentMatches?: { result: 'W' | 'L' | 'D' }[]; // Assuming this is the actual data structure
 }
 
 interface Standing {
@@ -36,6 +39,8 @@ interface Standing {
   name: string;
   type: 'total' | 'home' | 'away';
   rows: StandingRow[];
+  tournamentId?: number;
+  seasonId?: number;
 }
 
 interface StandingsData {
@@ -54,6 +59,9 @@ type ViewMode = 'short' | 'full' | 'form';
 // --- HELPER COMPONENTS ---
 
 const FormIndicator = ({ formString }: { formString: string }) => {
+  if (!formString) {
+    return <span className="text-xs text-gray-400">N/A</span>;
+  }
   const formItems = formString.split('').slice(0, 5);
 
   return (
@@ -89,9 +97,21 @@ const SofascorePrematchStandings: React.FC<SofascorePrematchStandingsProps> = ({
   const [tableView, setTableView] = useState<TableView>('total');
   const [viewMode, setViewMode] = useState<ViewMode>('short');
 
-  const activeStanding = standingsData?.standings?.find(
-    (s) => s.type === tableView
-  );
+  const sofascoreData = useSelector((state: RootState) => state.sofascore);
+
+  const totalStandings = standingsData?.standings?.find(s => s.type === 'total');
+  const tournamentId = totalStandings?.tournamentId;
+  const seasonId = totalStandings?.seasonId;
+
+  const homeStandings = tournamentId && seasonId ? sofascoreData.tournament?.[tournamentId]?.season?.[seasonId]?.standings?.home : undefined;
+  const awayStandings = tournamentId && seasonId ? sofascoreData.tournament?.[tournamentId]?.season?.[seasonId]?.standings?.away : undefined;
+
+  const allStandings: Standing[] = [];
+  if (totalStandings) allStandings.push(totalStandings);
+  if (homeStandings) allStandings.push({ ...homeStandings, type: 'home' });
+  if (awayStandings) allStandings.push({ ...awayStandings, type: 'away' });
+
+  const activeStanding = allStandings.find((s) => s.type === tableView);
 
   if (!standingsData || !standingsData.standings || !activeStanding) {
     return (
@@ -150,13 +170,11 @@ const SofascorePrematchStandings: React.FC<SofascorePrematchStandingsProps> = ({
           </>
         );
       case 'form':
+        // Derive form string from recentMatches if available
+        const formString = row.recentMatches?.map(m => m.result).join('') || '';
         return (
           <TableCell>
-            {row.form ? (
-              <FormIndicator formString={row.form} />
-            ) : (
-              <span className="text-xs text-gray-400">N/A</span>
-            )}
+            <FormIndicator formString={formString} />
           </TableCell>
         );
       case 'short':
